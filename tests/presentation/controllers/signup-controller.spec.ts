@@ -1,9 +1,8 @@
 import { SignUpController } from '@/presentation/controllers/signup-controller'
 import { InvalidParamError, MissingParamError } from '@/presentation/errors'
-import { Controller } from '@/presentation/protocols/controller'
+import { Controller, Validation } from '@/presentation/protocols'
 import { mockEmailValidation } from '@/tests/presentation/mocks/mock-email-validator'
 import { mockRequest } from '@/tests/presentation/mocks/mock-request'
-import { Validation } from '@/presentation/protocols'
 import { badRequest } from '@/presentation/helpers/http/http-helper'
 
 type SutTypes = {
@@ -28,8 +27,7 @@ describe('SignUpController', () => {
       password: 'any_password',
       passwordConfirmation: 'any_password'
     })
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('name'))
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('name')))
   })
 
   test('Should return 400 if no email is provided', async () => {
@@ -39,8 +37,7 @@ describe('SignUpController', () => {
       password: 'any_password',
       passwordConfirmation: 'any_password'
     })
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('email'))
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
   })
 
   test('Should return 400 if no password is provided', async () => {
@@ -78,7 +75,6 @@ describe('SignUpController', () => {
       password: 'any_passwod',
       passwordConfirmation: 'any_password'
     })
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('email'))
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
 })
