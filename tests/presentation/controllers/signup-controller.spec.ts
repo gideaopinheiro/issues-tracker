@@ -1,5 +1,6 @@
 import { Controller } from '@/presentation/protocols/controller'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
+import { MissingParamError } from '@/presentation/errors/missing-param-error'
 
 const makeSut = (): Controller => {
   const sut = new SignUpController()
@@ -15,5 +16,6 @@ describe('SignUpController', () => {
       passwordConfirmation: 'any_password'
     })
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new MissingParamError('name'))
   })
 })
