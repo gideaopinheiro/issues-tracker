@@ -7,7 +7,7 @@ export class SignUpController implements Controller {
   constructor (private readonly validation: Validation) {}
 
   async handle (request: SignUpController.Request): Promise<HttpResponse> {
-    const requiredFields = ['name', 'email', 'password']
+    const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
     for (const field of requiredFields) {
       if (!request[field]) {
         return badRequest(new MissingParamError(field))
