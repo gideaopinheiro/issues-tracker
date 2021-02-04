@@ -1,4 +1,3 @@
-import { InvalidParamError } from '@/presentation/errors/invalid-param-error'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { badRequest } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
@@ -13,8 +12,9 @@ export class SignUpController implements Controller {
         return badRequest(new MissingParamError(field))
       }
     }
-    if (!this.validation.validate(request.email)) {
-      return badRequest(new InvalidParamError('email'))
+    const error = this.validation.validate(request.email)
+    if (error) {
+      return badRequest(error)
     }
   }
 }

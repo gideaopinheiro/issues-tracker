@@ -68,10 +68,11 @@ describe('SignUpController', () => {
   })
 
   test('Should return 400 if an invalid email is provided', async () => {
-    const { sut } = makeSut()
+    const { sut, emailValidationStub } = makeSut()
+    jest.spyOn(emailValidationStub, 'validate').mockReturnValueOnce(new InvalidParamError('email'))
     const httpResponse = await sut.handle({
       name: 'any_name',
-      email: 'invalid_email',
+      email: 'invalid_email@mail.com',
       password: 'any_passwod',
       passwordConfirmation: 'any_password'
     })
