@@ -1,21 +1,21 @@
-import { Controller } from '@/presentation/protocols/controller'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
-import { MissingParamError } from '@/presentation/errors/missing-param-error'
-import { mockEmailValidator } from '../mocks/mock-email-validator'
-import { EmailValidator } from '@/validation/protocols/email-validator'
-import { mockRequest } from '../mocks/mock-request'
+import { InvalidParamError, MissingParamError } from '@/presentation/errors'
+import { Controller } from '@/presentation/protocols/controller'
+import { mockEmailValidation } from '@/tests/presentation/mocks/mock-email-validator'
+import { mockRequest } from '@/tests/presentation/mocks/mock-request'
+import { Validation } from '@/presentation/protocols'
 
 type SutTypes = {
   sut: Controller
-  emailValidatorStub: EmailValidator
+  emailValidationStub: Validation
 }
 
 const makeSut = (): SutTypes => {
-  const emailValidatorStub = mockEmailValidator()
-  const sut = new SignUpController(emailValidatorStub)
+  const emailValidationStub = mockEmailValidation()
+  const sut = new SignUpController(emailValidationStub)
   return {
     sut,
-    emailValidatorStub
+    emailValidationStub
   }
 }
 
@@ -42,10 +42,22 @@ describe('SignUpController', () => {
     expect(httpResponse.body).toEqual(new MissingParamError('email'))
   })
 
-  test('Should call emailValidator with correct value', async () => {
-    const { sut, emailValidatorStub } = makeSut()
-    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+  test('Should call validation with correct value', async () => {
+    const { sut, emailValidationStub } = makeSut()
+    const validateSpy = jest.spyOn(emailValidationStub, 'validate')
     await sut.handle(mockRequest())
-    expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
+    expect(validateSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
+  test('Should return 400 if an invalid email is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({
+      name: 'any_name',
+      email: 'invalid_email',
+      password: 'any_passwod',
+      passwordConfirmation: 'any_password'
+    })
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('email'))
   })
 })
