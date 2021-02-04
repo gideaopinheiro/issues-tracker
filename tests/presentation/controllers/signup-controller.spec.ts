@@ -4,6 +4,7 @@ import { Controller } from '@/presentation/protocols/controller'
 import { mockEmailValidation } from '@/tests/presentation/mocks/mock-email-validator'
 import { mockRequest } from '@/tests/presentation/mocks/mock-request'
 import { Validation } from '@/presentation/protocols'
+import { badRequest } from '@/presentation/helpers/http/http-helper'
 
 type SutTypes = {
   sut: Controller
@@ -40,6 +41,16 @@ describe('SignUpController', () => {
     })
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('email'))
+  })
+
+  test('Should return 400 if no password is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      passwordConfirmation: 'any_password'
+    })
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
   })
 
   test('Should call validation with correct value', async () => {
