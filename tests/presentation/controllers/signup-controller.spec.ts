@@ -1,12 +1,11 @@
+import { AddAccount } from '@/domain/usecases'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
 import { InvalidParamError, MissingParamError } from '@/presentation/errors'
+import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
+import { mockAddAccount, mockAddAccountParams } from '@/tests/domain/mocks'
 import { mockEmailValidation } from '@/tests/presentation/mocks/mock-email-validator'
 import { mockRequest } from '@/tests/presentation/mocks/mock-request'
-import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
-import { AddAccount } from '@/domain/usecases'
-import { mockAddAccount, mockAddAccountParams } from '@/tests/domain/mocks'
-import { ServerError } from '../errors/server-error'
 
 type SutTypes = {
   sut: Controller
