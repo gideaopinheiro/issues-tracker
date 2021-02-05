@@ -3,9 +3,10 @@ import { InvalidParamError, MissingParamError } from '@/presentation/errors'
 import { Controller, Validation } from '@/presentation/protocols'
 import { mockEmailValidation } from '@/tests/presentation/mocks/mock-email-validator'
 import { mockRequest } from '@/tests/presentation/mocks/mock-request'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
 import { AddAccount } from '@/domain/usecases'
 import { mockAddAccount, mockAddAccountParams } from '@/tests/domain/mocks'
+import { ServerError } from '../errors/server-error'
 
 type SutTypes = {
   sut: Controller
@@ -100,5 +101,14 @@ describe('SignUpController', () => {
     const addSpy = jest.spyOn(addAccountStub, 'add')
     await sut.handle(mockRequest())
     expect(addSpy).toHaveBeenCalledWith(mockAddAccountParams())
+  })
+
+  test('Should return 500 if validation throws', async () => {
+    const { sut, emailValidationStub } = makeSut()
+    jest.spyOn(emailValidationStub, 'validate').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError())
   })
 })
