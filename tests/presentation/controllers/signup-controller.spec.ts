@@ -1,9 +1,9 @@
 import { AddAccount } from '@/domain/usecases'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
 import { InvalidParamError, MissingParamError } from '@/presentation/errors'
-import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
+import { badRequest, serverError, ok } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
-import { mockAddAccount, mockAddAccountParams } from '@/tests/domain/mocks'
+import { mockAddAccount, mockAddAccountParams, mockAccount } from '@/tests/domain/mocks'
 import { mockEmailValidation } from '@/tests/presentation/mocks/mock-email-validator'
 import { mockRequest } from '@/tests/presentation/mocks/mock-request'
 
@@ -118,5 +118,11 @@ describe('SignUpController', () => {
     })
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError())
+  })
+
+  test('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok(mockAccount()))
   })
 })
