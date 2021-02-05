@@ -1,6 +1,6 @@
 import { AddAccount } from '@/domain/usecases'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
-import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 import { CompareFieldsValidation } from '@/validation/validators/compare-fields-validation'
 
@@ -29,11 +29,12 @@ export class SignUpController implements Controller {
       if (compareFieldsError) {
         return badRequest(compareFieldsError)
       }
-      await this.addAccount.add({
+      const account = await this.addAccount.add({
         name,
         email,
         password
       })
+      return ok(account)
     } catch (error) {
       return serverError()
     }
