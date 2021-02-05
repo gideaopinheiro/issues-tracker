@@ -4,18 +4,23 @@ import { Controller, Validation } from '@/presentation/protocols'
 import { mockEmailValidation } from '@/tests/presentation/mocks/mock-email-validator'
 import { mockRequest } from '@/tests/presentation/mocks/mock-request'
 import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { AddAccount } from '@/domain/usecases'
+import { mockAddAccount, mockAddAccountParams } from '@/tests/domain/mocks'
 
 type SutTypes = {
   sut: Controller
   emailValidationStub: Validation
+  addAccountStub: AddAccount
 }
 
 const makeSut = (): SutTypes => {
   const emailValidationStub = mockEmailValidation()
-  const sut = new SignUpController(emailValidationStub)
+  const addAccountStub = mockAddAccount()
+  const sut = new SignUpController(emailValidationStub, addAccountStub)
   return {
     sut,
-    emailValidationStub
+    emailValidationStub,
+    addAccountStub
   }
 }
 
@@ -88,5 +93,12 @@ describe('SignUpController', () => {
       passwordConfirmation: 'another_password'
     })
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('password')))
+  })
+
+  test('Should call addAccount with correct values', async () => {
+    const { sut, addAccountStub } = makeSut()
+    const addSpy = jest.spyOn(addAccountStub, 'add')
+    await sut.handle(mockRequest())
+    expect(addSpy).toHaveBeenCalledWith(mockAddAccountParams())
   })
 })
