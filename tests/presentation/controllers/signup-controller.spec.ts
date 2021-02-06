@@ -4,7 +4,7 @@ import { InvalidParamError, MissingParamError } from '@/presentation/errors'
 import { badRequest, serverError, ok } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
 import { mockAddAccount, mockAddAccountParams, mockAccount } from '@/tests/domain/mocks'
-import { mockEmailValidation } from '@/tests/presentation/mocks/mock-email-validator'
+import { mockEmailValidation } from '@/tests/presentation/mocks/mock-email-validation'
 import { mockRequest } from '@/tests/presentation/mocks/mock-request'
 
 type SutTypes = {
