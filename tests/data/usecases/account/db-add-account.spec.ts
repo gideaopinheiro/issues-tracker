@@ -1,4 +1,4 @@
-import { mockAddAccountParams } from '@/tests/domain/mocks'
+import { mockAccount, mockAddAccountParams } from '@/tests/domain/mocks'
 import { mockHasher, mockAddAccountRepository } from '@/tests/data/mocks'
 import { Hasher } from '@/data/protocols/criptography/hasher'
 import { DbAddAccount } from '@/data/usecases/account/db-add-account'
@@ -46,5 +46,11 @@ describe('DbAddAccount Usecase', () => {
     await sut.add(accountParams)
     accountParams.password = 'hashed_password'
     expect(addAccountSpy).toHaveBeenCalledWith(accountParams)
+  })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+    const account = await sut.add(mockAddAccountParams())
+    expect(account).toEqual(mockAccount())
   })
 })
