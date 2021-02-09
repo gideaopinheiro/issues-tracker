@@ -11,6 +11,11 @@ describe('AccountMongoRepository', () => {
     await MonogHelper.connect(process.env.MONGO_URL)
   })
 
+  beforeEach(async () => {
+    const accountCollection = MonogHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
+  })
+
   afterAll(async () => {
     await MonogHelper.disconnect()
   })
