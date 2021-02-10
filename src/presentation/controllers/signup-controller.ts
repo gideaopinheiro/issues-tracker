@@ -1,12 +1,14 @@
 import { AddAccount } from '@/domain/usecases'
 import { MissingParamError } from '@/presentation/errors/missing-param-error'
 import { badRequest, ok, serverError } from '@/presentation/helpers/http/http-helper'
-import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
+import { Controller, HttpResponse } from '@/presentation/protocols'
 import { CompareFieldsValidation } from '@/validation/validators/compare-fields-validation'
+import { EmailValidator } from '../../validation/protocols/email-validator'
+import { InvalidParamError } from '../errors'
 
 export class SignUpController implements Controller {
   constructor (
-    private readonly emailValidation: Validation,
+    private readonly emailValidator: EmailValidator,
     private readonly addAccount: AddAccount
   ) {}
 
@@ -19,9 +21,9 @@ export class SignUpController implements Controller {
         }
       }
       const { name, email, password, passwordConfirmation } = request
-      const emailValidationError = this.emailValidation.validate(email)
-      if (emailValidationError) {
-        return badRequest(emailValidationError)
+      const validEmail = this.emailValidator.isValid(email)
+      if (!validEmail) {
+        return badRequest(new InvalidParamError('email'))
       }
 
       const compareFieldsValidation = new CompareFieldsValidation('password', 'passwordConfirmation')
