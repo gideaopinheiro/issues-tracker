@@ -9,7 +9,7 @@ describe('SignUp Routes', () => {
   })
 
   beforeEach(async () => {
-    const accountCollection = MonogHelper.getCollection('accounts')
+    const accountCollection = await MonogHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
