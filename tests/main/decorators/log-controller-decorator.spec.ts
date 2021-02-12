@@ -37,8 +37,12 @@ describe('LogController Decorator', () => {
 
   test('should return 500 if Controller returns 500', async () => {
     const { sut, controllerStub } = makeSut()
-    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(Promise.resolve(serverError()))
+    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(Promise.resolve(serverError(new Error())))
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(serverError())
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('should ', async () => {
+
   })
 })

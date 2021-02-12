@@ -108,7 +108,7 @@ describe('SignUpController', () => {
       throw new Error()
     })
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(serverError())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('Should return 500 if validation throws', async () => {
@@ -117,7 +117,7 @@ describe('SignUpController', () => {
       throw new Error()
     })
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(serverError())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('Should return 200 on success', async () => {
