@@ -1,7 +1,7 @@
 import { Collection, MongoClient } from 'mongodb'
 import { AccountModel } from '@/domain/models/account'
 
-export const MonogHelper = {
+export const MongoHelper = {
   client: null as MongoClient,
   url: null as string,
 

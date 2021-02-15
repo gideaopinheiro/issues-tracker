@@ -1,6 +1,6 @@
 import { AccountMongoRepository } from '@/infra/db/mongodb/account-repository/account-mongo-repository'
 import { mockAddAccountParams } from '@/tests/domain/mocks'
-import { MonogHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 
 const makeSut = (): any => {
   return new AccountMongoRepository()
@@ -8,16 +8,16 @@ const makeSut = (): any => {
 
 describe('AccountMongoRepository', () => {
   beforeAll(async () => {
-    await MonogHelper.connect(process.env.MONGO_URL)
+    await MongoHelper.connect(process.env.MONGO_URL)
   })
 
   beforeEach(async () => {
-    const accountCollection = await MonogHelper.getCollection('accounts')
+    const accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
   afterAll(async () => {
-    await MonogHelper.disconnect()
+    await MongoHelper.disconnect()
   })
 
   test('should return an account on success', async () => {
