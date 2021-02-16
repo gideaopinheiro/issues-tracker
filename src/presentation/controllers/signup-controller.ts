@@ -1,6 +1,7 @@
 import { AddAccount } from '@/domain/usecases'
-import { badRequest, ok, serverError } from '@/presentation/helpers/http/http-helper'
+import { badRequest, ok, serverError, forbidden } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
+import { EmailAlreadyInUseError } from '@/presentation/errors'
 
 export class SignUpController implements Controller {
   constructor (
@@ -20,6 +21,9 @@ export class SignUpController implements Controller {
         email,
         password
       })
+      if (!account) {
+        return forbidden(new EmailAlreadyInUseError(email))
+      }
       return ok(account)
     } catch (error) {
       return serverError(error)
