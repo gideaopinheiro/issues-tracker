@@ -1,10 +1,11 @@
 import { AddAccount } from '@/domain/usecases'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
-import { ok } from '@/presentation/helpers/http/http-helper'
+import { ok, forbidden } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
 import { mockAccount, mockAddAccount, mockAddAccountParams } from '@/tests/domain/mocks'
 import { mockRequest } from '@/tests/presentation/mocks'
 import { mockValidation } from '@/tests/presentation/mocks/mock-validation'
+import { EmailAlreadyInUseError } from '@/presentation/errors'
 
 type SutTypes = {
   sut: Controller
@@ -36,6 +37,14 @@ describe('SignUpController', () => {
     const addSpy = jest.spyOn(addAccountStub, 'add')
     await sut.handle(mockRequest())
     expect(addSpy).toHaveBeenCalledWith(mockAddAccountParams())
+  })
+
+  test('should return 403 if addAccount returns null', async () => {
+    const { sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(Promise.resolve(null))
+    const request = mockRequest()
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(forbidden(new EmailAlreadyInUseError(request.email)))
   })
 
   test('Should return 200 on success', async () => {
