@@ -1,12 +1,13 @@
-import { AccountMongoRepository } from '@/infra/db/mongodb/account-repository/account-mongo-repository'
+import { AddAccountMongoRepository } from '@/infra/db/mongodb/account-repository/add-account-mongo-repository'
 import { mockAddAccountParams } from '@/tests/domain/mocks'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
+import { AddAccountRepository } from '@/data/protocols/db/add-account-repository'
 
-const makeSut = (): any => {
-  return new AccountMongoRepository()
+const makeSut = (): AddAccountRepository => {
+  return new AddAccountMongoRepository()
 }
 
-describe('AccountMongoRepository', () => {
+describe('AddAccountMongoRepository', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
   })
