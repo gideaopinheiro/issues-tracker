@@ -1,6 +1,6 @@
 import { AddAccount } from '@/domain/usecases'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
-import { ok, forbidden } from '@/presentation/helpers/http/http-helper'
+import { ok, forbidden, badRequest } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
 import { mockAccount, mockAddAccount, mockAddAccountParams } from '@/tests/domain/mocks'
 import { mockRequest } from '@/tests/presentation/mocks'
@@ -30,6 +30,13 @@ describe('SignUpController', () => {
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockRequest())
     expect(validateSpy).toHaveBeenCalledWith(mockRequest())
+  })
+
+  test('should return 400 if validation returns an error', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 
   test('Should call addAccount with correct values', async () => {
