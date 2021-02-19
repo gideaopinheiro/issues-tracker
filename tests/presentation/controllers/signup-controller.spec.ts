@@ -6,21 +6,26 @@ import { mockAccount, mockAddAccount, mockAddAccountParams } from '@/tests/domai
 import { mockRequest } from '@/tests/presentation/mocks'
 import { mockValidation } from '@/tests/presentation/mocks/mock-validation'
 import { EmailAlreadyInUseError } from '@/presentation/errors'
+import { Authentication } from '@/domain/usecases/authentication'
+import { mockAuthentication } from '@/tests/domain/mocks/mock-authentication'
 
 type SutTypes = {
   sut: Controller
   addAccountStub: AddAccount
   validationStub: Validation
+  authenticationStub: Authentication
 }
 
 const makeSut = (): SutTypes => {
   const addAccountStub = mockAddAccount()
   const validationStub = mockValidation()
-  const sut = new SignUpController(addAccountStub, validationStub)
+  const authenticationStub = mockAuthentication()
+  const sut = new SignUpController(addAccountStub, validationStub, authenticationStub)
   return {
     sut,
     addAccountStub,
-    validationStub
+    validationStub,
+    authenticationStub
   }
 }
 
@@ -61,6 +66,13 @@ describe('SignUpController', () => {
     const request = mockRequest()
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(forbidden(new EmailAlreadyInUseError(request.email)))
+  })
+
+  test('should call authentication with correct values', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
+    await sut.handle(mockRequest())
+    expect(authSpy).toHaveBeenCalledWith({ email: 'any_email@mail.com', password: 'any_password' })
   })
 
   test('Should return 200 on success', async () => {
