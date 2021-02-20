@@ -1,24 +1,29 @@
-import { Authentication } from '@/domain/usecases/authentication'
-import { mockLoadAccountByEmailRepository } from '@/tests/data/mocks/mock-load-account-by-email-repository'
+import { Encrypter } from '@/data/protocols/criptography/encrypter'
+import { HashComparer } from '@/data/protocols/criptography/hash-comparer'
 import { LoadAccountByEmailRepository } from '@/data/protocols/db/load-account-by-email-repository'
 import { DbAuthentication } from '@/data/usecases/db-authentication'
-import { HashComparer } from '@/data/protocols/criptography/hash-comparer'
-import { mockHashComparer } from '@/tests/data/mocks'
+import { Authentication } from '@/domain/usecases/authentication'
+import { mockEncrypter, mockHashComparer } from '@/tests/data/mocks'
+import { mockLoadAccountByEmailRepository } from '@/tests/data/mocks/mock-load-account-by-email-repository'
+import { mockAccount } from '@/tests/domain/mocks'
 
 type SutTypes = {
   sut: Authentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hashComparerStub: HashComparer
+  encrypterStub: Encrypter
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository()
   const hashComparerStub = mockHashComparer()
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub)
+  const encrypterStub = mockEncrypter()
+  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub, encrypterStub)
   return {
     sut,
     loadAccountByEmailRepositoryStub,
-    hashComparerStub
+    hashComparerStub,
+    encrypterStub
   }
 }
 
@@ -42,5 +47,13 @@ describe('DbAuthentication', () => {
     const compareSpy = jest.spyOn(hashComparerStub, 'compare')
     await sut.auth({ email: 'any_email@mail.com', password: 'any_password' })
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
+  })
+
+  test('should call encrypter with correct value', async () => {
+    const { sut, encrypterStub, loadAccountByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(mockAccount()))
+    const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
+    await sut.auth({ email: 'any_email@mail.com', password: 'any_password' })
+    expect(encryptSpy).toHaveBeenCalledWith('any_id')
   })
 })
