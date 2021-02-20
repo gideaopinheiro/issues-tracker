@@ -56,4 +56,10 @@ describe('DbAuthentication', () => {
     await sut.auth({ email: 'any_email@mail.com', password: 'any_password' })
     expect(encryptSpy).toHaveBeenCalledWith('any_id')
   })
+
+  test('should return a valid accessToken on success', async () => {
+    const { sut } = makeSut()
+    const accessToken = await sut.auth({ email: 'any_email@mail.com', password: 'any_password' })
+    expect(accessToken).toBe('any_access_token')
+  })
 })
