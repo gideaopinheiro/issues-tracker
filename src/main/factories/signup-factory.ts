@@ -18,7 +18,7 @@ export const makeSignUpController = (): Controller => {
   const loadAccountByEmailMongoRepository = new LoadAccountByEmailMongoRepository()
   const addAccount = new DbAddAccount(bcryptAdapter, addAccountMongoRepository, loadAccountByEmailMongoRepository)
   const jwtAdapter = new JwtAdapter(env.secretKey)
-  const dbAuthentication = new DbAuthentication(loadAccountByEmailMongoRepository, bcryptAdapter, jwtAdapter)
+  const dbAuthentication = new DbAuthentication(loadAccountByEmailMongoRepository, bcryptAdapter, jwtAdapter, addAccountMongoRepository)
   const signUpController = new SignUpController(addAccount, makeSignUpValidation(), dbAuthentication)
   const logErrorMongoRepository = new LogErrorMongoRepository()
   return new LogControllerDecorator(signUpController, logErrorMongoRepository)
