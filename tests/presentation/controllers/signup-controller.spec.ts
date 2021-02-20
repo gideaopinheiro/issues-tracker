@@ -1,13 +1,13 @@
 import { AddAccount } from '@/domain/usecases'
+import { Authentication } from '@/domain/usecases/authentication'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
-import { ok, forbidden, badRequest, serverError } from '@/presentation/helpers/http/http-helper'
+import { EmailAlreadyInUseError } from '@/presentation/errors'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
-import { mockAccount, mockAddAccount, mockAddAccountParams } from '@/tests/domain/mocks'
+import { mockAddAccount, mockAddAccountParams } from '@/tests/domain/mocks'
+import { mockAuthentication } from '@/tests/domain/mocks/mock-authentication'
 import { mockRequest } from '@/tests/presentation/mocks'
 import { mockValidation } from '@/tests/presentation/mocks/mock-validation'
-import { EmailAlreadyInUseError } from '@/presentation/errors'
-import { Authentication } from '@/domain/usecases/authentication'
-import { mockAuthentication } from '@/tests/domain/mocks/mock-authentication'
 
 type SutTypes = {
   sut: Controller
@@ -76,8 +76,9 @@ describe('SignUpController', () => {
   })
 
   test('Should return 200 on success', async () => {
-    const { sut } = makeSut()
+    const { sut, authenticationStub } = makeSut()
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.resolve('any_access_token'))
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok(mockAccount()))
+    expect(httpResponse).toEqual(ok('any_access_token'))
   })
 })
