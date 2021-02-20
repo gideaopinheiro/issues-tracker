@@ -7,6 +7,8 @@ import { LogErrorMongoRepository } from '@/infra/db/mongodb/log/log-error-reposi
 import { LogControllerDecorator } from '@/main/decorators/log-controller-decorator'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
 import { Controller } from '@/presentation/protocols'
+import { JwtAdapter } from '@/infra/criptography/jwt-adapter'
+import env from '@/main/config/env'
 import { makeSignUpValidation } from './signup-validation-factory'
 
 export const makeSignUpController = (): Controller => {
@@ -15,7 +17,8 @@ export const makeSignUpController = (): Controller => {
   const addAccountMongoRepository = new AddAccountMongoRepository()
   const loadAccountByEmailMongoRepository = new LoadAccountByEmailMongoRepository()
   const addAccount = new DbAddAccount(bcryptAdapter, addAccountMongoRepository, loadAccountByEmailMongoRepository)
-  const dbAuthentication = new DbAuthentication(loadAccountByEmailMongoRepository, bcryptAdapter)
+  const jwtAdapter = new JwtAdapter(env.secretKey)
+  const dbAuthentication = new DbAuthentication(loadAccountByEmailMongoRepository, bcryptAdapter, jwtAdapter)
   const signUpController = new SignUpController(addAccount, makeSignUpValidation(), dbAuthentication)
   const logErrorMongoRepository = new LogErrorMongoRepository()
   return new LogControllerDecorator(signUpController, logErrorMongoRepository)
