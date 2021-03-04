@@ -1,14 +1,16 @@
 import { AddAccount } from '@/domain/usecases'
-import { badRequest, ok, serverError, forbidden } from '@/presentation/helpers/http/http-helper'
-import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
-import { EmailAlreadyInUseError } from '@/presentation/errors'
 import { Authentication } from '@/domain/usecases/authentication'
+import { EmailTokenGenerator } from '@/domain/usecases/email-token-generator'
+import { EmailAlreadyInUseError } from '@/presentation/errors'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
+import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 
 export class SignUpController implements Controller {
   constructor (
     private readonly addAccount: AddAccount,
     private readonly validation: Validation,
-    private readonly authenticaiton: Authentication
+    private readonly authenticaiton: Authentication,
+    private readonly emailTokenGenerator: EmailTokenGenerator
   ) {}
 
   async handle (request: SignUpController.Request): Promise<HttpResponse> {
@@ -18,10 +20,12 @@ export class SignUpController implements Controller {
         return badRequest(error)
       }
       const { name, email, password } = request
+      const confirmationCode: string = await this.emailTokenGenerator.generateToken(email)
       const account = await this.addAccount.add({
         name,
         email,
-        password
+        password,
+        confirmationCode
       })
       if (!account) {
         return forbidden(new EmailAlreadyInUseError(email))

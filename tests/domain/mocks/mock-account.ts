@@ -13,12 +13,15 @@ export const mockAddAccount = (): AddAccount => {
 export const mockAddAccountParams = (): AddAccount.Params => ({
   name: 'any_name',
   email: 'any_email@mail.com',
-  password: 'any_password'
+  password: 'any_password',
+  confirmationCode: 'any_confirmation_code'
 })
 
 export const mockAccount = (): AccountModel => ({
   id: 'any_id',
   name: 'any_name',
   email: 'any_email@mail.com',
-  password: 'hashed_password'
+  password: 'hashed_password',
+  status: 'pending',
+  confirmationCode: 'any_confirmation_code'
 })

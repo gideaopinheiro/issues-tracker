@@ -9,5 +9,6 @@ export namespace AddAccount {
     name: string
     email: string
     password: string
+    confirmationCode: string
   }
 }
