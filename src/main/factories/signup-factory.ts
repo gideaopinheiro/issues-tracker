@@ -3,12 +3,13 @@ import { LogControllerDecorator } from '@/main/decorators/log-controller-decorat
 import { SignUpController } from '@/presentation/controllers/signup-controller'
 import { Controller } from '@/presentation/protocols'
 import { EmailTokenGeneratorAdapter } from '../../utils/email-token-generator'
+import env from '../config/env'
 import { makeDbAuthentication } from './db-authentication-factory'
 import { makeAddAccount } from './make-add-account-factory'
 import { makeSignUpValidation } from './signup-validation-factory'
 
 export const makeSignUpController = (): Controller => {
-  const emailTokenGeneratorAdapter = new EmailTokenGeneratorAdapter()
+  const emailTokenGeneratorAdapter = new EmailTokenGeneratorAdapter(env.secretConfirmationKey)
   const signUpController = new SignUpController(
     makeAddAccount(),
     makeSignUpValidation(),
