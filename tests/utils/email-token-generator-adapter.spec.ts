@@ -19,4 +19,10 @@ describe('EmailTokenGenerator Adapter', () => {
     await sut.generateToken('any_email@mail.com')
     expect(signSpy).toHaveBeenCalledWith({ email: 'any_email@mail.com' }, 'secret')
   })
+
+  test('should return an confirmation code on success', async () => {
+    const sut = makeSut()
+    const confirmationCode = await sut.generateToken('any_email@mail.com')
+    expect(confirmationCode).toBe('hash')
+  })
 })
