@@ -1,5 +1,4 @@
 import { AddAccount } from '@/domain/usecases'
-import { Authentication } from '@/domain/usecases/authentication'
 import { EmailTokenGenerator } from '@/domain/usecases/email-token-generator'
 import { EmailAlreadyInUseError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
@@ -9,7 +8,6 @@ export class SignUpController implements Controller {
   constructor (
     private readonly addAccount: AddAccount,
     private readonly validation: Validation,
-    private readonly authenticaiton: Authentication,
     private readonly emailTokenGenerator: EmailTokenGenerator
   ) {}
 
@@ -30,8 +28,7 @@ export class SignUpController implements Controller {
       if (!account) {
         return forbidden(new EmailAlreadyInUseError(email))
       }
-      const accessToken = await this.authenticaiton.auth({ email, password })
-      return ok(accessToken)
+      return ok(confirmationCode)
     } catch (error) {
       return serverError(error)
     }
