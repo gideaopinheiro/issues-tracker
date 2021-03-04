@@ -1,11 +1,10 @@
 import { AddAccount } from '@/domain/usecases'
-import { Authentication } from '@/domain/usecases/authentication'
 import { EmailTokenGenerator } from '@/domain/usecases/email-token-generator'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
 import { EmailAlreadyInUseError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
-import { mockAddAccount, mockAddAccountParams, mockAuthentication, mockEmailTokenGenerator } from '@/tests/domain/mocks'
+import { mockAddAccount, mockAddAccountParams, mockEmailTokenGenerator } from '@/tests/domain/mocks'
 import { mockRequest } from '@/tests/presentation/mocks'
 import { mockValidation } from '@/tests/presentation/mocks/mock-validation'
 
@@ -13,21 +12,18 @@ type SutTypes = {
   sut: Controller
   addAccountStub: AddAccount
   validationStub: Validation
-  authenticationStub: Authentication
   emailTokenGeneratorStub: EmailTokenGenerator
 }
 
 const makeSut = (): SutTypes => {
   const addAccountStub = mockAddAccount()
   const validationStub = mockValidation()
-  const authenticationStub = mockAuthentication()
   const emailTokenGeneratorStub = mockEmailTokenGenerator()
-  const sut = new SignUpController(addAccountStub, validationStub, authenticationStub, emailTokenGeneratorStub)
+  const sut = new SignUpController(addAccountStub, validationStub, emailTokenGeneratorStub)
   return {
     sut,
     addAccountStub,
     validationStub,
-    authenticationStub,
     emailTokenGeneratorStub
   }
 }
@@ -71,13 +67,6 @@ describe('SignUpController', () => {
     expect(httpResponse).toEqual(forbidden(new EmailAlreadyInUseError(request.email)))
   })
 
-  test('should call authentication with correct values', async () => {
-    const { sut, authenticationStub } = makeSut()
-    const authSpy = jest.spyOn(authenticationStub, 'auth')
-    await sut.handle(mockRequest())
-    expect(authSpy).toHaveBeenCalledWith({ email: 'any_email@mail.com', password: 'any_password' })
-  })
-
   test('should call emailTokenGenerator with correct value', async () => {
     const { sut, emailTokenGeneratorStub } = makeSut()
     const generateTokenSpy = jest.spyOn(emailTokenGeneratorStub, 'generateToken')
@@ -86,9 +75,9 @@ describe('SignUpController', () => {
   })
 
   test('Should return 200 on success', async () => {
-    const { sut, authenticationStub } = makeSut()
-    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.resolve('any_access_token'))
+    const { sut, emailTokenGeneratorStub } = makeSut()
+    jest.spyOn(emailTokenGeneratorStub, 'generateToken').mockReturnValueOnce(Promise.resolve('any_confirmation_code'))
     const httpResponse = await sut.handle(mockRequest())
-    expect(httpResponse).toEqual(ok('any_access_token'))
+    expect(httpResponse).toEqual(ok('any_confirmation_code'))
   })
 })
