@@ -1,9 +1,11 @@
+import { SendConfirmationEmail } from '@/data/protocols/comunication/send-confirmation-email'
 import { AddAccount } from '@/domain/usecases'
 import { EmailTokenGenerator } from '@/domain/usecases/email-token-generator'
 import { SignUpController } from '@/presentation/controllers/signup-controller'
 import { EmailAlreadyInUseError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
+import { mockSendConfirmationEmail } from '@/tests/data/mocks/mock-send-confirmation-email'
 import { mockAddAccount, mockAddAccountParams, mockEmailTokenGenerator } from '@/tests/domain/mocks'
 import { mockRequest } from '@/tests/presentation/mocks'
 import { mockValidation } from '@/tests/presentation/mocks/mock-validation'
@@ -13,18 +15,21 @@ type SutTypes = {
   addAccountStub: AddAccount
   validationStub: Validation
   emailTokenGeneratorStub: EmailTokenGenerator
+  sendConfirmationEmailStub: SendConfirmationEmail
 }
 
 const makeSut = (): SutTypes => {
   const addAccountStub = mockAddAccount()
   const validationStub = mockValidation()
   const emailTokenGeneratorStub = mockEmailTokenGenerator()
-  const sut = new SignUpController(addAccountStub, validationStub, emailTokenGeneratorStub)
+  const sendConfirmationEmailStub = mockSendConfirmationEmail()
+  const sut = new SignUpController(addAccountStub, validationStub, emailTokenGeneratorStub, sendConfirmationEmailStub)
   return {
     sut,
     addAccountStub,
     validationStub,
-    emailTokenGeneratorStub
+    emailTokenGeneratorStub,
+    sendConfirmationEmailStub
   }
 }
 
@@ -72,6 +77,17 @@ describe('SignUpController', () => {
     const generateTokenSpy = jest.spyOn(emailTokenGeneratorStub, 'generateToken')
     await sut.handle(mockRequest())
     expect(generateTokenSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
+  test('should call sendConirmationEmail with correct value', async () => {
+    const { sut, sendConfirmationEmailStub } = makeSut()
+    const sendSpy = jest.spyOn(sendConfirmationEmailStub, 'send')
+    await sut.handle(mockRequest())
+    expect(sendSpy).toHaveBeenCalledWith({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      confirmationCode: 'any_confirmation_code'
+    })
   })
 
   test('Should return 200 on success', async () => {
