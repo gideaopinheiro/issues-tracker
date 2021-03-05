@@ -7,7 +7,7 @@ import { UpdateAccessTokenRepository } from '@/data/protocols/db/update-access-t
 export class AddAccountMongoRepository implements AddAccountRepository, UpdateAccessTokenRepository {
   async addAccount (accountParams: AddAccount.Params): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
-    const result = await accountCollection.insertOne(accountParams)
+    const result = await accountCollection.insertOne({ ...accountParams, status: 'pending' })
     return MongoHelper.map(result.ops[0])
   }
 
