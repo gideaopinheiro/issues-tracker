@@ -81,4 +81,20 @@ describe('DbAuthentication', () => {
     await sut.auth({ email: 'any_email@mail.com', password: 'any_passwod' })
     expect(updateSpy).toHaveBeenCalledWith('any_id', 'any_access_token')
   })
+
+  test('should return null if account is not active', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(Promise.resolve(
+      {
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'hashed_password',
+        status: 'pending',
+        confirmationCode: 'any_confirmation_code'
+      }
+    ))
+    const accessToken = await sut.auth({ email: 'any_email@mail.com', password: 'any_password' })
+    expect(accessToken).toBeNull()
+  })
 })
