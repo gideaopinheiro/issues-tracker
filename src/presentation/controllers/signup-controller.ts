@@ -3,12 +3,14 @@ import { EmailTokenGenerator } from '@/domain/usecases/email-token-generator'
 import { EmailAlreadyInUseError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
+import { SendConfirmationEmail } from '@/data/protocols/comunication/send-confirmation-email'
 
 export class SignUpController implements Controller {
   constructor (
     private readonly addAccount: AddAccount,
     private readonly validation: Validation,
-    private readonly emailTokenGenerator: EmailTokenGenerator
+    private readonly emailTokenGenerator: EmailTokenGenerator,
+    private readonly sendConfirmationEmail: SendConfirmationEmail
   ) {}
 
   async handle (request: SignUpController.Request): Promise<HttpResponse> {
@@ -28,6 +30,7 @@ export class SignUpController implements Controller {
       if (!account) {
         return forbidden(new EmailAlreadyInUseError(email))
       }
+      await this.sendConfirmationEmail.send({ name, email, confirmationCode })
       return ok(confirmationCode)
     } catch (error) {
       return serverError(error)
