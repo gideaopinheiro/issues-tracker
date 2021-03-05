@@ -22,6 +22,6 @@ export const mockAccount = (): AccountModel => ({
   name: 'any_name',
   email: 'any_email@mail.com',
   password: 'hashed_password',
-  status: 'pending',
+  status: 'active',
   confirmationCode: 'any_confirmation_code'
 })

@@ -26,7 +26,8 @@ describe('LoginRouter', () => {
     await accountCollection.insertOne({
       name: 'Gideao',
       email: 'gideao.email@gmail.com',
-      password: passwd
+      password: passwd,
+      status: 'active'
     })
     await request(app).post('/api/login')
       .send({
