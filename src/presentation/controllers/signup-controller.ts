@@ -1,9 +1,9 @@
+import { SendConfirmationEmail } from '@/data/protocols/comunication/send-confirmation-email'
 import { AddAccount } from '@/domain/usecases'
 import { EmailTokenGenerator } from '@/domain/usecases/email-token-generator'
 import { EmailAlreadyInUseError } from '@/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
-import { SendConfirmationEmail } from '@/data/protocols/comunication/send-confirmation-email'
 
 export class SignUpController implements Controller {
   constructor (
