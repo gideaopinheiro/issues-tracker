@@ -79,7 +79,7 @@ describe('SignUpController', () => {
     expect(generateTokenSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 
-  test('should call sendConirmationEmail with correct value', async () => {
+  test('should call sendConfirmationEmail with correct value', async () => {
     const { sut, sendConfirmationEmailStub } = makeSut()
     const sendSpy = jest.spyOn(sendConfirmationEmailStub, 'send')
     await sut.handle(mockRequest())
@@ -91,8 +91,9 @@ describe('SignUpController', () => {
   })
 
   test('Should return 200 on success', async () => {
-    const { sut, emailTokenGeneratorStub } = makeSut()
+    const { sut, emailTokenGeneratorStub, sendConfirmationEmailStub } = makeSut()
     jest.spyOn(emailTokenGeneratorStub, 'generateToken').mockReturnValueOnce(Promise.resolve('any_confirmation_code'))
+    jest.spyOn(sendConfirmationEmailStub, 'send').mockReturnValueOnce(Promise.resolve(true))
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok('any_confirmation_code'))
   })
