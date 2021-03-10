@@ -1,7 +1,7 @@
 import { AccountConfirmation } from '@/domain/usecases'
 import { ConfirmationController } from '@/presentation/controllers/confirmation-controller'
 import { MissingParamError } from '@/presentation/errors'
-import { badRequest, unauthorized } from '@/presentation/helpers/http/http-helper'
+import { badRequest, serverError, unauthorized } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
 import { mockAccountConfirmation } from '@/tests/domain/mocks/mock-account-confirmation'
 import { mockValidation } from '../mocks'
@@ -44,5 +44,12 @@ describe('Confirmation Controller', () => {
     jest.spyOn(accountConfirmationStub, 'confirm').mockReturnValueOnce(Promise.resolve(null))
     const response = await sut.handle({ confirmationCode: 'any_confirmation_code' })
     expect(response).toEqual(unauthorized())
+  })
+
+  test('shuld return 500 if accountConfirmation throws', async () => {
+    const { sut, accountConfirmationStub } = makeSut()
+    jest.spyOn(accountConfirmationStub, 'confirm').mockReturnValueOnce(Promise.reject(new Error()))
+    const response = await sut.handle({ confirmationCode: 'any_confirmation_code' })
+    expect(response).toEqual(serverError(new Error()))
   })
 })
