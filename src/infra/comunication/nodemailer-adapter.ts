@@ -3,7 +3,7 @@ import { createTransport } from 'nodemailer'
 import { smtpConfig } from '@/main/config/smtp'
 
 export class NodemailerAdapter implements SendConfirmationEmail {
-  async send (params: SendConfirmationEmail.Params): Promise<SendConfirmationEmail.Result> {
+  async send (params: SendConfirmationEmail.Params): Promise<void> {
     const { name, email, confirmationCode } = params
     const transporter = createTransport({
       host: smtpConfig.host,
@@ -28,7 +28,5 @@ export class NodemailerAdapter implements SendConfirmationEmail {
       from: `Atendimento IssuesTracker <${smtpConfig.user}>`,
       to: `${email}`
     })
-
-    return true
   }
 }

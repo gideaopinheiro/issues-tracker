@@ -1,5 +1,5 @@
 export interface SendConfirmationEmail {
-  send: (params: SendConfirmationEmail.Params) => Promise<SendConfirmationEmail.Result>
+  send: (params: SendConfirmationEmail.Params) => Promise<void>
 }
 
 export namespace SendConfirmationEmail {
@@ -8,6 +8,4 @@ export namespace SendConfirmationEmail {
     email: string
     confirmationCode: string
   }
-
-  export type Result = boolean
 }
