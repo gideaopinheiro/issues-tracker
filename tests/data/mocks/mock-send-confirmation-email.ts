@@ -1,4 +1,4 @@
-import { SendConfirmationEmail } from '../../data/protocols/comunication/send-confirmation-email'
+import { SendConfirmationEmail } from '@/data/protocols/comunication/send-confirmation-email'
 
 export const mockSendConfirmationEmail = (): SendConfirmationEmail => {
   class SendConfirmationEmailStub implements SendConfirmationEmail {
