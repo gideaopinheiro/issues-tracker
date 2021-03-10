@@ -1,9 +1,11 @@
+import { AccountConfirmation } from '@/domain/usecases'
+import { ConfirmationController } from '@/presentation/controllers/confirmation-controller'
+import { MissingParamError } from '@/presentation/errors'
+import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { Controller, Validation } from '@/presentation/protocols'
+import { mockAccountConfirmation } from '@/tests/domain/mocks/mock-account-confirmation'
 import { mockValidation } from '../mocks'
 import { mockConfirmationRequest } from '../mocks/mock-confirmation-request'
-import { Controller, Validation } from '../protocols'
-import { ConfirmationController } from '@/presentation/controllers/confirmation-controller'
-import { AccountConfirmation } from '@/domain/usecases'
-import { mockAccountConfirmation } from '@/tests/domain/mocks/mock-account-confirmation'
 
 type SutTypes = {
   sut: Controller
@@ -28,5 +30,12 @@ describe('Confirmation Controller', () => {
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockConfirmationRequest())
     expect(validateSpy).toHaveBeenCalledWith({ confirmationCode: 'any_confirmation_code' })
+  })
+
+  test('should return 400 if validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('confirmationCode'))
+    const response = await sut.handle({ confirmationCode: 'any_confirmation_code' })
+    expect(response).toEqual(badRequest(new MissingParamError('confirmationCode')))
   })
 })

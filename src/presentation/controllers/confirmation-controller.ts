@@ -9,7 +9,6 @@ export class ConfirmationController implements Controller {
   ) {}
 
   async handle (request: ConfirmationController.Request): Promise<HttpResponse> {
-    console.log(request)
     const error = this.validation.validate(request)
     if (error) {
       return badRequest(error)
