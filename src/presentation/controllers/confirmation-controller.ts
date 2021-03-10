@@ -1,4 +1,4 @@
-import { badRequest, ok, unauthorized } from '@/presentation/helpers/http/http-helper'
+import { badRequest, ok, serverError, unauthorized } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 import { AccountConfirmation } from '@/domain/usecases'
 
@@ -9,16 +9,20 @@ export class ConfirmationController implements Controller {
   ) {}
 
   async handle (request: ConfirmationController.Request): Promise<HttpResponse> {
-    const error = this.validation.validate(request)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(request)
+      if (error) {
+        return badRequest(error)
+      }
+      const { confirmationCode } = request
+      const account = await this.accountConfirmation.confirm(confirmationCode)
+      if (!account) {
+        return unauthorized()
+      }
+      return ok('account successfully verified')
+    } catch (error) {
+      return serverError(error)
     }
-    const { confirmationCode } = request
-    const account = await this.accountConfirmation.confirm(confirmationCode)
-    if (!account) {
-      return unauthorized()
-    }
-    return ok('account successfully verified')
   }
 }
 
