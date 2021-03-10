@@ -49,4 +49,16 @@ describe('DbAccountConfirmation usecase', () => {
     const response = await sut.confirm('any_confirmation_code')
     expect(response).toBeNull()
   })
+
+  test('should return an account on success', async () => {
+    const { sut } = makeSut()
+    const account = await sut.confirm('any_confirmation_code')
+    expect(account).toBeTruthy()
+    expect(account.id).toBeTruthy()
+    expect(account.name).toBe('any_name')
+    expect(account.email).toBe('any_email@mail.com')
+    expect(account.password).toBe('hashed_password')
+    expect(account.status).toBe('active')
+    expect(account.confirmationCode).toBe('any_confirmation_code')
+  })
 })
