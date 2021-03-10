@@ -47,4 +47,32 @@ describe('AccountMongoRepository', () => {
       expect(account.password).toBe('any_password')
     })
   })
+
+  describe('loadByToken()', () => {
+    test('should return an account on loadByToken success', async () => {
+      const sut = makeSut()
+      await sut.addAccount(mockAddAccountParams())
+      const account = await sut.loadByToken('any_confirmation_code')
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.status).toBe('pending')
+    })
+  })
+
+  describe('updateAccount', () => {
+    test('should return an account on success', async () => {
+      const sut = makeSut()
+      await sut.addAccount(mockAddAccountParams())
+      const account = await sut.updateAccount({
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        status: 'active',
+        confirmationCode: 'any_confirmation_code'
+      })
+      expect(account).toBeTruthy()
+      expect(account.status).toBe('active')
+    })
+  })
 })

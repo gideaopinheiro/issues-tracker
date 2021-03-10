@@ -1,15 +1,25 @@
+import { badRequest, ok, unauthorized } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { AccountConfirmation } from '@/domain/usecases'
 
 export class ConfirmationController implements Controller {
-  constructor (private readonly validation: Validation) {}
+  constructor (
+    private readonly validation: Validation,
+    private readonly accountConfirmation: AccountConfirmation
+  ) {}
 
   async handle (request: ConfirmationController.Request): Promise<HttpResponse> {
+    console.log(request)
     const error = this.validation.validate(request)
     if (error) {
       return badRequest(error)
     }
-    return null
+    const { confirmationCode } = request
+    const account = await this.accountConfirmation.confirm(confirmationCode)
+    if (!account) {
+      return unauthorized()
+    }
+    return ok('account successfully created')
   }
 }
 
