@@ -35,16 +35,11 @@ export class AccountMongoRepository implements AddAccountRepository, UpdateAcces
     const accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.updateOne({ email: params.email }, { $set: { status: 'active' } })
     const account = await this.loadByEmail(params.email)
-    const mappedAccount = MongoHelper.map(account)
-    if (mappedAccount.status === 'active') {
-      return account && MongoHelper.map(account)
-    }
-    return null
+    return account && MongoHelper.map(account)
   }
 
   async loadByToken (params: any): Promise<LoadAccountByConfirmationTokenRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
-    // console.log(params)
     const account = await accountCollection.findOne({ confirmationCode: params })
     if (!account) {
       return null
