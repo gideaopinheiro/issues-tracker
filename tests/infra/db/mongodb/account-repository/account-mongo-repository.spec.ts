@@ -57,6 +57,13 @@ describe('AccountMongoRepository', () => {
       expect(account.id).toBeTruthy()
       expect(account.status).toBe('pending')
     })
+
+    test('should return null if loadByToken fails', async () => {
+      const sut = makeSut()
+      await sut.addAccount(mockAddAccountParams())
+      const account = await sut.loadByToken('other_confirmation_code')
+      expect(account).toBeNull()
+    })
   })
 
   describe('updateAccount', () => {
