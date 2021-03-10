@@ -19,7 +19,7 @@ export class ConfirmationController implements Controller {
     if (!account) {
       return unauthorized()
     }
-    return ok('account successfully created')
+    return ok('account successfully verified')
   }
 }
 
