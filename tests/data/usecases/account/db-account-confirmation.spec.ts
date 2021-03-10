@@ -29,7 +29,7 @@ describe('DbAccountConfirmation usecase', () => {
     expect(loadByTokenSpy).toHaveBeenCalledWith('any_confirmation_token')
   })
 
-  test('should return null if loadAccountByConfirmationTokenRepositoryStub fails', async () => {
+  test('should return null if loadAccountByConfirmationTokenRepository fails', async () => {
     const { sut, loadAccountByConfirmationTokenRepositoryStub } = makeSut()
     jest.spyOn(loadAccountByConfirmationTokenRepositoryStub, 'loadByToken').mockReturnValueOnce(Promise.resolve(null))
     const response = await sut.confirm('any_confirmation_code')
@@ -41,5 +41,12 @@ describe('DbAccountConfirmation usecase', () => {
     const updateAccountSpy = jest.spyOn(updateAccountRepositoryStub, 'updateAccount')
     await sut.confirm('any_confirmation_token')
     expect(updateAccountSpy).toHaveBeenCalledWith(mockAccount())
+  })
+
+  test('should return null if updateAccountRepository fails', async () => {
+    const { sut, updateAccountRepositoryStub } = makeSut()
+    jest.spyOn(updateAccountRepositoryStub, 'updateAccount').mockReturnValueOnce(Promise.resolve(null))
+    const response = await sut.confirm('any_confirmation_code')
+    expect(response).toBeNull()
   })
 })
