@@ -1,1 +1,6 @@
 export * from './add-account'
+export * from './load-account-by-confirmation-token'
+export * from './authentication'
+export * from './email-token-confirmation'
+export * from './email-token-generator'
+export * from './account-confirmation'
