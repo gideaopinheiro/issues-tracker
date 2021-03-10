@@ -31,7 +31,7 @@ export class SignUpController implements Controller {
         return forbidden(new EmailAlreadyInUseError(email))
       }
       await this.sendConfirmationEmail.send({ name, email, confirmationCode })
-      return ok(confirmationCode)
+      return ok('account successfully created')
     } catch (error) {
       return serverError(error)
     }
