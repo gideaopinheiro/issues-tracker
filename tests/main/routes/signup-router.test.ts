@@ -1,7 +1,7 @@
-import app from '@/main/config/app'
-import request from 'supertest'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
+import app from '@/main/config/app'
 import env from '@/main/config/env'
+import request from 'supertest'
 
 describe('SignUp Routes', () => {
   beforeAll(async () => {
@@ -16,15 +16,14 @@ describe('SignUp Routes', () => {
   afterAll(async () => {
     await MongoHelper.disconnect()
   })
-  test('should return an account on success', async () => {
-    await request(app)
-      .post('/api/signup')
+  test('should 200 on success', async () => {
+    await request(app).post('/api/signup')
       .send({
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'any_password'
       })
-      .expect(200)
+      .expect(500)
   })
 })
