@@ -1,6 +1,6 @@
 export const smtpConfig = {
-  host: 'smtp.gmail.com',
-  port: 587,
-  user: 'issues.tracker.teste@gmail.com',
-  pass: 'minhasenha123#'
+  host: process.env.HOST,
+  port: process.env.NODEMAILER_PORT,
+  user: process.env.USER_EMAIL,
+  pass: process.env.USER_PASS
 }

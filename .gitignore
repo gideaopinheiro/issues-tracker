@@ -6,3 +6,4 @@ data
 !src/data
 !tests/data
 globalConfig.json
+.env

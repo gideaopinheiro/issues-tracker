@@ -1,21 +1,17 @@
 import { SendConfirmationEmail } from '@/data/protocols/comunication/send-confirmation-email'
-import { createTransport } from 'nodemailer'
 import { smtpConfig } from '@/main/config/smtp'
+import { createTransport } from 'nodemailer'
 
 export class NodemailerAdapter implements SendConfirmationEmail {
   async send (params: SendConfirmationEmail.Params): Promise<void> {
     const { name, email, confirmationCode } = params
     const transporter = createTransport({
       host: smtpConfig.host,
-      port: smtpConfig.port,
+      port: parseInt(smtpConfig.port),
       secure: false,
-      auth: {
-        user: smtpConfig.user,
-        pass: smtpConfig.pass
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
+      auth:
+        { user: smtpConfig.user, pass: smtpConfig.pass },
+      tls: { rejectUnauthorized: false }
     })
 
     await transporter.sendMail({

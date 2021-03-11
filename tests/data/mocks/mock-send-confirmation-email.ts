@@ -2,8 +2,8 @@ import { SendConfirmationEmail } from '@/data/protocols/comunication/send-confir
 
 export const mockSendConfirmationEmail = (): SendConfirmationEmail => {
   class SendConfirmationEmailStub implements SendConfirmationEmail {
-    async send (params: SendConfirmationEmail.Params): Promise<SendConfirmationEmail.Result> {
-      return Promise.resolve(true)
+    async send (params: SendConfirmationEmail.Params): Promise<void> {
+      return Promise.resolve()
     }
   }
   return new SendConfirmationEmailStub()
