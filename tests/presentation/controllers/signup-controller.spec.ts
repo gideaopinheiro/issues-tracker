@@ -91,9 +91,8 @@ describe('SignUpController', () => {
   })
 
   test('Should return 200 on success', async () => {
-    const { sut, emailTokenGeneratorStub, sendConfirmationEmailStub } = makeSut()
+    const { sut, emailTokenGeneratorStub } = makeSut()
     jest.spyOn(emailTokenGeneratorStub, 'generateToken').mockReturnValueOnce(Promise.resolve('any_confirmation_code'))
-    jest.spyOn(sendConfirmationEmailStub, 'send').mockReturnValueOnce(Promise.resolve(true))
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok('account successfully created'))
   })
