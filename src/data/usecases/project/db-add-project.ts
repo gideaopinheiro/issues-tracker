@@ -6,7 +6,7 @@ export class DbAddProject implements AddProject {
   constructor (private readonly addProjectRepository: AddProjectRepository) {}
 
   async add (params: AddProject.Params): Promise<ProjectModel> {
-    await this.addProjectRepository.addProject(params)
-    return null
+    const project = await this.addProjectRepository.addProject(params)
+    return project
   }
 }
