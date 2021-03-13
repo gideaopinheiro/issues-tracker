@@ -32,7 +32,15 @@ export const MongoHelper = {
   },
 
   mapProject (project: any): ProjectModel {
-    const { _id, _owner_id, ...projectWithoutIds } = project
-    return Object.assign({}, projectWithoutIds, { id: _id, ownerId: _owner_id })
+    const { _id, members, ...remainder } = project
+    const parsedId = Object.assign({}, remainder, { id: _id })
+    const parsedMembers = []
+    if (members) {
+      for (const member of members) {
+        const { _id, ...r } = member
+        parsedMembers.push(Object.assign({}, r, { id: _id }))
+      }
+    }
+    return Object.assign({}, parsedId, { members: parsedMembers })
   }
 }
