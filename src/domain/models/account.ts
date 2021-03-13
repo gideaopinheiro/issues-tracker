@@ -5,4 +5,5 @@ export type AccountModel = {
   password: string
   status: string
   confirmationCode: string
+  projects: string[]
 }

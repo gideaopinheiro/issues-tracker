@@ -1,6 +1,6 @@
 {
-  "name": "clean-node-api",
-  "version": "2.2.0",
+  "name": "issues-tracker-api",
+  "version": "0.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
