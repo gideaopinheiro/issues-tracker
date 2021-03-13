@@ -24,7 +24,7 @@ describe('DbAddProject', () => {
     const addProjectSpy = jest.spyOn(addProjectRepositoryStub, 'addProject')
     await sut.add(mockProjectParams())
     expect(addProjectSpy).toHaveBeenCalledWith({
-      owner_id: 'any_owner_id',
+      ownerId: 'any_owner_id',
       title: 'any_title',
       description: 'any_description'
     })
