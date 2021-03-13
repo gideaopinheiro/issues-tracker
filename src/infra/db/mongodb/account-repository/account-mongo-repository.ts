@@ -8,7 +8,7 @@ export class AccountMongoRepository implements AddAccountRepository, UpdateAcces
   async addAccount (accountParams: AddAccount.Params): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne({ ...accountParams, status: 'pending' })
-    return MongoHelper.map(result.ops[0])
+    return MongoHelper.mapAccount(result.ops[0])
   }
 
   async update (id: string, token: string): Promise<void> {
@@ -28,14 +28,14 @@ export class AccountMongoRepository implements AddAccountRepository, UpdateAcces
     if (!account) {
       return null
     }
-    return MongoHelper.map(account)
+    return MongoHelper.mapAccount(account)
   }
 
   async updateAccount (params: UpdateAccountRepository.Params): Promise<UpdateAccountRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.updateOne({ email: params.email }, { $set: { status: 'active' } })
     const account = await this.loadByEmail(params.email)
-    return account && MongoHelper.map(account)
+    return account && MongoHelper.mapAccount(account)
   }
 
   async loadByToken (params: any): Promise<LoadAccountByConfirmationTokenRepository.Result> {
@@ -44,6 +44,6 @@ export class AccountMongoRepository implements AddAccountRepository, UpdateAcces
     if (!account) {
       return null
     }
-    return MongoHelper.map(account)
+    return MongoHelper.mapAccount(account)
   }
 }

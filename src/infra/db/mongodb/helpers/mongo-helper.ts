@@ -1,5 +1,6 @@
-import { Collection, MongoClient } from 'mongodb'
+import { ProjectModel } from '@/domain/models'
 import { AccountModel } from '@/domain/models/account'
+import { Collection, MongoClient } from 'mongodb'
 
 export const MongoHelper = {
   client: null as MongoClient,
@@ -25,8 +26,13 @@ export const MongoHelper = {
     return this.client.db().collection(name)
   },
 
-  map (account: any): AccountModel {
+  mapAccount (account: any): AccountModel {
     const { _id, ...accountWithoutId } = account
     return Object.assign({}, accountWithoutId, { id: _id })
+  },
+
+  mapProject (project: any): ProjectModel {
+    const { _id, _owner_id, ...projectWithoutIds } = project
+    return Object.assign({}, projectWithoutIds, { id: _id, ownerId: _owner_id })
   }
 }
