@@ -91,7 +91,8 @@ describe('DbAuthentication', () => {
         email: 'any_email@mail.com',
         password: 'hashed_password',
         status: 'pending',
-        confirmationCode: 'any_confirmation_code'
+        confirmationCode: 'any_confirmation_code',
+        projects: ['1', '2']
       }
     ))
     const accessToken = await sut.auth({ email: 'any_email@mail.com', password: 'any_password' })

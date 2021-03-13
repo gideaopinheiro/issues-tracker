@@ -76,7 +76,8 @@ describe('AccountMongoRepository', () => {
         email: 'any_email@mail.com',
         password: 'any_password',
         status: 'active',
-        confirmationCode: 'any_confirmation_code'
+        confirmationCode: 'any_confirmation_code',
+        projects: ['1', '2']
       })
       expect(account).toBeTruthy()
       expect(account.status).toBe('active')
