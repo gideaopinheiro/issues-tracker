@@ -30,6 +30,13 @@ describe('DbAddProject', () => {
     })
   })
 
+  it('should throw if addProjectRepository throws', async () => {
+    const { sut, addProjectRepositoryStub } = makeSut()
+    jest.spyOn(addProjectRepositoryStub, 'addProject').mockReturnValueOnce(Promise.reject(new Error()))
+    const response = sut.add(mockProjectParams())
+    await expect(response).rejects.toThrow()
+  })
+
   it('should return a project on success', async () => {
     const { sut } = makeSut()
     const response = await sut.add(mockProjectParams())
