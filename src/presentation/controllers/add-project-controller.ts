@@ -5,7 +5,7 @@ import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 export class AddProjectController implements Controller {
   constructor (private readonly validation: Validation) {}
 
-  async handle (params: CreateProjectController.Params): Promise<HttpResponse> {
+  async handle (params: AddProjectController.Params): Promise<HttpResponse> {
     const error = this.validation.validate(params)
     if (error) {
       return badRequest(error)
@@ -14,6 +14,6 @@ export class AddProjectController implements Controller {
   }
 }
 
-export namespace CreateProjectController {
+export namespace AddProjectController {
   export type Params = ProjectModel
 }
