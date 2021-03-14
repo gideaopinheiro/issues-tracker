@@ -1,6 +1,6 @@
-import { badRequest } from '@/presentation/helpers/http/http-helper'
-import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 import { AddProject } from '@/domain/usecases'
+import { badRequest, ok } from '@/presentation/helpers/http/http-helper'
+import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 
 export class AddProjectController implements Controller {
   constructor (
@@ -13,8 +13,8 @@ export class AddProjectController implements Controller {
     if (error) {
       return badRequest(error)
     }
-    await this.addProject.add(params)
-    return null
+    const project = await this.addProject.add(params)
+    return ok(project)
   }
 }
 
