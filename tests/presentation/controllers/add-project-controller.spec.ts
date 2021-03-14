@@ -1,8 +1,8 @@
 import { AddProjectController } from '@/presentation/controllers/add-project-controller'
 import { MissingParamError } from '@/presentation/errors'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
-import { mockAddProject, mockProjectParams } from '@/tests/domain/mocks'
+import { mockAddProject, mockProject, mockProjectParams } from '@/tests/domain/mocks'
 import { mockProjectValidation } from '@/tests/presentation/mocks'
 import { AddProject } from '@/domain/usecases'
 
@@ -47,5 +47,18 @@ describe('CreateProjectController', () => {
     const addSpy = jest.spyOn(addProjectStub, 'add')
     await sut.handle(mockProjectParams())
     expect(addSpy).toHaveBeenCalledWith(mockProjectParams())
+  })
+
+  it('should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockProjectParams())
+    expect(httpResponse).toEqual(ok(mockProject()))
+  })
+
+  it('should return 500 on failure', async () => {
+    const { sut, addProjectStub } = makeSut()
+    jest.spyOn(addProjectStub, 'add').mockReturnValueOnce(Promise.reject(new Error()))
+    const httpResponse = await sut.handle(mockProjectParams())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
