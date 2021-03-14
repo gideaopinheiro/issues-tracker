@@ -13,3 +13,12 @@ export const mockProjectParams = (): AddProject.Params => ({
   title: 'any_title',
   description: 'any_description'
 })
+
+export const mockAddProject = (): AddProject => {
+  class AddProjectStub implements AddProject {
+    async add (params: AddProject.Params): Promise<ProjectModel> {
+      return Promise.resolve(mockProject())
+    }
+  }
+  return new AddProjectStub()
+}
