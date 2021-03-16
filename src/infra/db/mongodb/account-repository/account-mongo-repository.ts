@@ -7,7 +7,7 @@ import { UpdateAccountRepository } from '@/data/protocols/db/update-account-repo
 export class AccountMongoRepository implements AddAccountRepository, UpdateAccessTokenRepository, LoadAccountByEmailRepository, UpdateAccountRepository, LoadAccountByConfirmationTokenRepository {
   async addAccount (accountParams: AddAccount.Params): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
-    const result = await accountCollection.insertOne({ ...accountParams, status: 'pending' })
+    const result = await accountCollection.insertOne({ ...accountParams, status: 'pending', projects: [] })
     return MongoHelper.mapAccount(result.ops[0])
   }
 
