@@ -1,4 +1,4 @@
-import { mockTicketParams } from '@/tests/domain/mocks'
+import { mockTicket, mockTicketParams } from '@/tests/domain/mocks'
 import { AddTicketRepository } from '@/data/protocols/db'
 import { DbAddTicket } from '@/data/usecases/project/db-add-ticket'
 import { mockAddTicketRepository } from '@/tests/data/mocks/mock-add-ticket-repository'
@@ -31,5 +31,11 @@ describe('DbAddTicket', () => {
     const addTicketSpy = jest.spyOn(addTicketRepositoryStub, 'addTicket')
     await sut.add(mockTicketParams())
     expect(addTicketSpy).toHaveBeenCalledWith(mockTicketParams())
+  })
+
+  it('should return a ticket on success', async () => {
+    const { sut } = makeSut()
+    const ticket = await sut.add(mockTicketParams())
+    expect(ticket).toEqual(mockTicket())
   })
 })
