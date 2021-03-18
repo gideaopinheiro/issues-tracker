@@ -1,49 +1,34 @@
-export type Ticket = {
+export type TicketModel = {
   id: string
   title: string
   description: string
   from: string
-  to: string
-  priority: string
+  to?: string
+  priority: TicketPriority
   status: TicketStatus
   type: TicketType
   createdAt: Date
-  updatedAt: Date
-  coments: Array<{
-    id: string
-    message: string
-    createdAt: Date
-  }>
+  updatedAt?: Date
+  coments?: Comment[]
 }
 
-enum TicketStatus {
+export type TicketComment = {
+  id: string
+  message: string
+  createdAt: Date
+}
+
+export enum TicketPriority {
+  'low',
+  'medium',
+  'high'
+}
+export enum TicketStatus {
   'opened',
   'closed'
 }
 
-enum TicketType {
-  'BUG',
-  'ERROR'
+export enum TicketType {
+  'bug',
+  'error'
 }
-
-// const t: Ticket = {
-//   id: 'string',
-//   title: 'string',
-//   description: 'string',
-//   from: 'string',
-//   to: 'string',
-//   priority: 'string',
-//   status: TicketStatus.opened,
-//   type: TicketType.BUG,
-//   createdAt: new Date(),
-//   updatedAt: new Date(),
-//   coments: [{
-//     id: 'string0',
-//     message: 'string',
-//     createdAt: new Date()
-//   }, {
-//     id: 'string2',
-//     message: 'string',
-//     createdAt: new Date()
-//   }]
-// }
