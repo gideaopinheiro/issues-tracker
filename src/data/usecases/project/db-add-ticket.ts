@@ -6,7 +6,7 @@ export class DbAddTicket implements AddTicket {
   constructor (private readonly addTicketRepository: AddTicketRepository) {}
 
   async add (params: AddTicket.Params): Promise<TicketModel> {
-    await this.addTicketRepository.addTicket(params)
-    return null
+    const ticket = await this.addTicketRepository.addTicket(params)
+    return ticket
   }
 }

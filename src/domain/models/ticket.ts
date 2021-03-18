@@ -1,9 +1,10 @@
 export type TicketModel = {
   id: string
+  project: string
   title: string
   description: string
-  from: string
-  to?: string
+  assignedBy: string
+  assignedTo?: string[]
   priority: TicketPriority
   status: TicketStatus
   type: TicketType

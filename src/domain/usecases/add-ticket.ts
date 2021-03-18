@@ -8,8 +8,8 @@ export namespace AddTicket {
   export type Params = {
     title: string
     description: string
-    from: string
-    to?: string
+    assignedBy: string
+    assignedTo?: string
     priority: TicketPriority
     status: TicketStatus
     type: TicketType

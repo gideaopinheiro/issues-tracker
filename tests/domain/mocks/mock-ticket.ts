@@ -4,7 +4,7 @@ import { AddTicket } from '@/domain/usecases/add-ticket'
 export const mockTicketParams = (): AddTicket.Params => ({
   title: 'any_title',
   description: 'any_description',
-  from: 'any_id',
+  assignedBy: 'any_id',
   priority: TicketPriority.low,
   status: TicketStatus.opened,
   type: TicketType.bug,
@@ -14,9 +14,10 @@ export const mockTicketParams = (): AddTicket.Params => ({
 export const mockTicket = (): TicketModel => ({
   id: 'any_id',
   title: 'any_title',
+  project: 'any_project_id',
   description: 'any_description',
-  from: 'from_any_id',
-  to: 'to_any_id',
+  assignedBy: 'from_any_id',
+  assignedTo: ['to_any_id1', 'to_any_id2'],
   priority: TicketPriority.low,
   status: TicketStatus.opened,
   type: TicketType.bug,
