@@ -1,4 +1,4 @@
-import { ProjectModel } from '@/domain/models'
+import { ProjectModel, TicketModel } from '@/domain/models'
 import { AccountModel } from '@/domain/models/account'
 import { Collection, MongoClient } from 'mongodb'
 
@@ -42,5 +42,10 @@ export const MongoHelper = {
       }
     }
     return Object.assign({}, parsedId, { members: parsedMembers })
+  },
+
+  mapTicket (ticket: any): TicketModel {
+    const { _id, ...ticketWithoutId } = ticket
+    return Object.assign({}, ticketWithoutId, { id: _id })
   }
 }

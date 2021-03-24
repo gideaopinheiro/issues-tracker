@@ -5,31 +5,16 @@ export type TicketModel = {
   description: string
   assignedBy: string
   assignedTo?: string[]
-  priority: TicketPriority
-  status: TicketStatus
-  type: TicketType
+  priority: string
+  status: string
+  type: string
   createdAt: Date
   updatedAt?: Date
-  coments?: Comment[]
+  coments?: TicketComment[]
 }
 
 export type TicketComment = {
   id: string
   message: string
   createdAt: Date
-}
-
-export enum TicketPriority {
-  'low',
-  'medium',
-  'high'
-}
-export enum TicketStatus {
-  'opened',
-  'closed'
-}
-
-export enum TicketType {
-  'bug',
-  'error'
 }
