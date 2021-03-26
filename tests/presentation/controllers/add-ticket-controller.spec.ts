@@ -1,9 +1,9 @@
 import { AddTicket } from '@/domain/usecases/add-ticket'
 import { AddTicketController } from '@/presentation/controllers/add-ticket-controller'
 import { MissingParamError } from '@/presentation/errors'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { badRequest, ok } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
-import { mockAddTicket, mockTicketParams } from '@/tests/domain/mocks'
+import { mockAddTicket, mockTicket, mockTicketParams } from '@/tests/domain/mocks'
 import { mockValidation } from '@/tests/presentation/mocks'
 
 type SutTypes = {
@@ -44,5 +44,11 @@ describe('AddTicket Controller', () => {
     const { description, ...ticketParams } = mockTicketParams()
     const httpResponse = await sut.handle(ticketParams)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('description')))
+  })
+
+  it('should return an ticket on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockTicketParams())
+    expect(httpResponse).toEqual(ok(mockTicket()))
   })
 })
