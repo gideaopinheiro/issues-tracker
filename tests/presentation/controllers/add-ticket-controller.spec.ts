@@ -24,21 +24,21 @@ const makeSut = (): SutTypes => {
 }
 
 describe('AddTicket Controller', () => {
-  it('should call validation with correct values', async () => {
+  test('should call validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockTicketParams())
     expect(validateSpy).toHaveBeenCalledWith(mockTicketParams())
   })
 
-  it('should call addTicket with correct values', async () => {
+  test('should call addTicket with correct values', async () => {
     const { sut, addTicketStub } = makeSut()
     const addSpy = jest.spyOn(addTicketStub, 'add')
     await sut.handle(mockTicketParams())
     expect(addSpy).toHaveBeenCalledWith(mockTicketParams())
   })
 
-  it('should return 400 if validation fails', async () => {
+  test('should return 400 if validation fails', async () => {
     const { sut, validationStub } = makeSut()
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('description'))
     const { description, ...ticketParams } = mockTicketParams()
@@ -46,7 +46,7 @@ describe('AddTicket Controller', () => {
     expect(httpResponse).toEqual(badRequest(new MissingParamError('description')))
   })
 
-  it('should return an ticket on success', async () => {
+  test('should return an ticket on success', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockTicketParams())
     expect(httpResponse).toEqual(ok(mockTicket()))

@@ -19,7 +19,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbAddProject', () => {
-  it('should call addProjectRepository with correct values', async () => {
+  test('should call addProjectRepository with correct values', async () => {
     const { sut, addProjectRepositoryStub } = makeSut()
     const addProjectSpy = jest.spyOn(addProjectRepositoryStub, 'addProject')
     await sut.add(mockProjectParams())
@@ -30,14 +30,14 @@ describe('DbAddProject', () => {
     })
   })
 
-  it('should throw if addProjectRepository throws', async () => {
+  test('should throw if addProjectRepository throws', async () => {
     const { sut, addProjectRepositoryStub } = makeSut()
     jest.spyOn(addProjectRepositoryStub, 'addProject').mockReturnValueOnce(Promise.reject(new Error()))
     const response = sut.add(mockProjectParams())
     await expect(response).rejects.toThrow()
   })
 
-  it('should return a project on success', async () => {
+  test('should return a project on success', async () => {
     const { sut } = makeSut()
     const response = await sut.add(mockProjectParams())
     expect(response).toEqual(mockProject())

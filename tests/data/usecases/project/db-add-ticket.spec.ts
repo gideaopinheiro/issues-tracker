@@ -26,14 +26,14 @@ describe('DbAddTicket', () => {
     MockDate.reset()
   })
 
-  it('should call addTicketRepository with correct values', async () => {
+  test('should call addTicketRepository with correct values', async () => {
     const { sut, addTicketRepositoryStub } = makeSut()
     const addTicketSpy = jest.spyOn(addTicketRepositoryStub, 'addTicket')
     await sut.add(mockTicketParams())
     expect(addTicketSpy).toHaveBeenCalledWith(mockTicketParams())
   })
 
-  it('should return a ticket on success', async () => {
+  test('should return a ticket on success', async () => {
     const { sut } = makeSut()
     const ticket = await sut.add(mockTicketParams())
     expect(ticket).toEqual(mockTicket())

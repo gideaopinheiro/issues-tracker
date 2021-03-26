@@ -23,7 +23,7 @@ describe('AddProject Route', () => {
     await MongoHelper.disconnect()
   })
 
-  it('should return 200 on success', async () => {
+  test('should return 200 on success', async () => {
     const result = await accountCollection.insertOne({
       name: 'any_name',
       email: 'any_email@mail.com',
