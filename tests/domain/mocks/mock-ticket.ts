@@ -23,3 +23,12 @@ export const mockTicket = (): TicketModel => ({
   type: 'bug',
   createdAt: new Date()
 })
+
+export const mockAddTicket = (): AddTicket => {
+  class AddProjectStub implements AddTicket {
+    async add (params: AddTicket.Params): Promise<TicketModel> {
+      return Promise.resolve(mockTicket())
+    }
+  }
+  return new AddProjectStub()
+}
