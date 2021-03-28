@@ -1,11 +1,32 @@
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import app from '@/main/config/app'
 import env from '@/main/config/env'
+import { sign } from 'jsonwebtoken'
 import { Collection } from 'mongodb'
 import request from 'supertest'
 
+let accountCollection: Collection
+
+const mockAccessToken = async (): Promise<{ token: string, accountId: string }> => {
+  const res = await accountCollection.insertOne({
+    name: 'Gideao',
+    email: 'gideaopinheiro@gmail.com',
+    password: '123',
+    role: 'admin'
+  })
+  const id = res.ops[0]._id
+  const accessToken = sign({ id }, env.secretKey)
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return { token: accessToken, accountId: id }
+}
+
 describe('AddProject Route', () => {
-  let accountCollection: Collection
   let projectCollection: Collection
 
   beforeAll(async () => {
@@ -24,18 +45,12 @@ describe('AddProject Route', () => {
   })
 
   test('should return 200 on success', async () => {
-    const result = await accountCollection.insertOne({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'hashed_password',
-      status: 'active',
-      projects: []
-    })
-    const account = MongoHelper.mapAccount(result.ops[0])
+    const { token, accountId } = await mockAccessToken()
     await request(app)
       .post('/api/projects/add')
+      .set('access-token', token)
       .send({
-        account: account.id,
+        account: accountId,
         title: 'any_title',
         description: 'any_description'
       })

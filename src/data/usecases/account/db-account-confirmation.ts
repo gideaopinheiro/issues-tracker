@@ -9,7 +9,7 @@ export class DbAccountConfirmation implements AccountConfirmation {
   ) { }
 
   async confirm (params: AccountConfirmation.Params): Promise<AccountConfirmation.Result> {
-    const account = await this.loadAccountByConfirmationTokenRepository.loadByToken(params)
+    const account = await this.loadAccountByConfirmationTokenRepository.loadByConfirmationToken(params)
     if (!account) {
       return null
     }

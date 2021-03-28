@@ -1,7 +1,7 @@
 import { AccountModel } from '@/domain/models/account'
 
 export interface LoadAccountByConfirmationTokenRepository {
-  loadByToken: (params: LoadAccountByConfirmationTokenRepository.Params) => Promise<LoadAccountByConfirmationTokenRepository.Result>
+  loadByConfirmationToken: (params: LoadAccountByConfirmationTokenRepository.Params) => Promise<LoadAccountByConfirmationTokenRepository.Result>
 }
 
 export namespace LoadAccountByConfirmationTokenRepository {

@@ -1,10 +1,10 @@
-import { AddAccountRepository, LoadAccountByConfirmationTokenRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@/data/protocols/db'
+import { AddAccountRepository, LoadAccountByConfirmationTokenRepository, LoadAccountByEmailRepository, LoadAccountByTokenRepository, UpdateAccessTokenRepository } from '@/data/protocols/db'
 import { AccountModel } from '@/domain/models/account'
 import { AddAccount } from '@/domain/usecases'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { UpdateAccountRepository } from '@/data/protocols/db/update-account-repository'
 
-export class AccountMongoRepository implements AddAccountRepository, UpdateAccessTokenRepository, LoadAccountByEmailRepository, UpdateAccountRepository, LoadAccountByConfirmationTokenRepository {
+export class AccountMongoRepository implements AddAccountRepository, UpdateAccessTokenRepository, LoadAccountByEmailRepository, UpdateAccountRepository, LoadAccountByConfirmationTokenRepository, LoadAccountByTokenRepository {
   async addAccount (accountParams: AddAccount.Params): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne({ ...accountParams, status: 'pending', projects: [] })
@@ -38,12 +38,28 @@ export class AccountMongoRepository implements AddAccountRepository, UpdateAcces
     return account && MongoHelper.mapAccount(account)
   }
 
-  async loadByToken (params: any): Promise<LoadAccountByConfirmationTokenRepository.Result> {
+  async loadByConfirmationToken (params: any): Promise<LoadAccountByConfirmationTokenRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({ confirmationCode: params })
     if (!account) {
       return null
     }
     return MongoHelper.mapAccount(account)
+  }
+
+  async loadByToken (accessToken: string, role?: string): Promise<AccountModel> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    const account = await accountCollection.findOne({
+      accessToken,
+      $or: [
+        {
+          role
+        },
+        {
+          role: 'admin'
+        }
+      ]
+    })
+    return account && MongoHelper.mapAccount(account)
   }
 }

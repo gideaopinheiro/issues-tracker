@@ -11,7 +11,7 @@ export class DbLoadAccountByConfirmationToken implements LoadAccountByConfirmati
   async load (params: LoadAccountByConfirmationToken.Params): Promise<LoadAccountByConfirmationToken.Result> {
     const token = await this.decrypter.decrypt(params)
     if (token) {
-      const account = await this.loadAccountByConfirmationTokenRepository.loadByToken(params)
+      const account = await this.loadAccountByConfirmationTokenRepository.loadByConfirmationToken(params)
       if (account) {
         return account
       }

@@ -5,6 +5,7 @@ import { badRequest, ok } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
 import { mockAddTicket, mockTicket, mockTicketParams } from '@/tests/domain/mocks'
 import { mockValidation } from '@/tests/presentation/mocks'
+import MockDate from 'mockdate'
 
 type SutTypes = {
   sut: Controller
@@ -24,6 +25,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('AddTicket Controller', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   test('should call validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')

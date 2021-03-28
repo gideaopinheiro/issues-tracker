@@ -48,20 +48,20 @@ describe('AccountMongoRepository', () => {
     })
   })
 
-  describe('loadByToken()', () => {
-    test('should return an account on loadByToken success', async () => {
+  describe('loadByConfirmationToken()', () => {
+    test('should return an account on loadByConfirmationToken success', async () => {
       const sut = makeSut()
       await sut.addAccount(mockAddAccountParams())
-      const account = await sut.loadByToken('any_confirmation_code')
+      const account = await sut.loadByConfirmationToken('any_confirmation_code')
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.status).toBe('pending')
     })
 
-    test('should return null if loadByToken fails', async () => {
+    test('should return null if loadByConfirmationToken fails', async () => {
       const sut = makeSut()
       await sut.addAccount(mockAddAccountParams())
-      const account = await sut.loadByToken('other_confirmation_code')
+      const account = await sut.loadByConfirmationToken('other_confirmation_code')
       expect(account).toBeNull()
     })
   })
