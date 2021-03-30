@@ -2,6 +2,7 @@ import { AddTicketCommentRepository } from '@/data/protocols/db'
 import { DbAddTicketComment } from '@/data/usecases/project/db-add-ticket-comment'
 import { mockComment, mockCommentParams } from '@/tests/domain/mocks'
 import { mockAddTicketCommentRepository } from '@/tests/data/mocks'
+import MockDate from 'mockdate'
 
 type SutTypes = {
   sut: DbAddTicketComment
@@ -18,6 +19,13 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbAddTicketComment', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
   test('should call AddTicketCommentRepository with correct value', async () => {
     const { sut, addTicketCommentRepositoryStub } = makeSut()
     const addCommentSpy = jest.spyOn(addTicketCommentRepositoryStub, 'addComment')
