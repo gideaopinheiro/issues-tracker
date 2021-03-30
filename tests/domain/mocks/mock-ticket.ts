@@ -1,4 +1,4 @@
-import { TicketModel } from '@/domain/models'
+import { TicketComment, TicketModel } from '@/domain/models'
 import { AddTicket } from '@/domain/usecases/add-ticket'
 
 export const mockTicketParams = (): AddTicket.Params => ({
@@ -21,6 +21,16 @@ export const mockTicket = (): TicketModel => ({
   priority: 'low',
   status: 'opened',
   type: 'bug',
+  createdAt: new Date()
+})
+
+export const mockCommentParams = (): any => ({
+  message: 'any_message'
+})
+
+export const mockComment = (): TicketComment => ({
+  id: 'any_id',
+  message: 'any_message',
   createdAt: new Date()
 })
 
