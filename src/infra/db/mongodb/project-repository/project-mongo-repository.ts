@@ -1,10 +1,10 @@
-import { AddProjectRepository, AddTicketRepository } from '@/data/protocols/db'
+import { AddProjectRepository, AddTicketCommentRepository, AddTicketRepository } from '@/data/protocols/db'
 import { TicketModel } from '@/domain/models'
 import { AddTicket } from '@/domain/usecases/add-ticket'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
 
-export class ProjectMongoRepository implements AddProjectRepository, AddTicketRepository {
+export class ProjectMongoRepository implements AddProjectRepository, AddTicketRepository, AddTicketCommentRepository {
   async addProject (params: AddProjectRepository.Params): Promise<AddProjectRepository.Result> {
     const projectCollection = await MongoHelper.getCollection('projects')
     const accountCollection = await MongoHelper.getCollection('accounts')
@@ -26,5 +26,22 @@ export class ProjectMongoRepository implements AddProjectRepository, AddTicketRe
 
     await projectCollection.updateOne({ _id: params.project }, { $push: { tickets: ticket.id } })
     return ticket
+  }
+
+  async addComment (params: AddTicketCommentRepository.Params): Promise<AddTicketCommentRepository.Result> {
+    const ticketCollection = await MongoHelper.getCollection('tickets')
+    await ticketCollection.updateOne({
+      _id: new ObjectId(params.ticket)
+    }, {
+      $push: {
+        comments: {
+          message: params.message,
+          createdAt: new Date()
+        }
+      }
+    })
+    const result = await ticketCollection.findOne({ _id: new ObjectId(params.ticket) })
+    const ticket = MongoHelper.mapTicket(result.ops[0])
+    return ticket.coments[ticket.coments.length - 1]
   }
 }

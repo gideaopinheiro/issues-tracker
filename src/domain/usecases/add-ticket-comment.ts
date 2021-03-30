@@ -6,6 +6,7 @@ export interface AddTicketComment {
 
 export namespace AddTicketComment {
   export type Params = {
+    ticket: string
     message: string
   }
 }

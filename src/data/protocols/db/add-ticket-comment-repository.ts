@@ -5,6 +5,8 @@ export interface AddTicketCommentRepository {
 }
 
 export namespace AddTicketCommentRepository {
-  export type Params = { message: string }
+  export type Params = {
+    ticket: string
+    message: string }
   export type Result = TicketComment
 }
