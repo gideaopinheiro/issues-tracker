@@ -1,6 +1,6 @@
 import { AddTicketCommentRepository } from '@/data/protocols/db'
 import { DbAddTicketComment } from '@/data/usecases/project/db-add-ticket-comment'
-import { mockCommentParams } from '@/tests/domain/mocks'
+import { mockComment, mockCommentParams } from '@/tests/domain/mocks'
 import { mockAddTicketCommentRepository } from '@/tests/data/mocks'
 
 type SutTypes = {
@@ -23,5 +23,11 @@ describe('DbAddTicketComment', () => {
     const addCommentSpy = jest.spyOn(addTicketCommentRepositoryStub, 'addComment')
     await sut.add(mockCommentParams())
     expect(addCommentSpy).toHaveBeenCalledWith(mockCommentParams())
+  })
+
+  test('should return a comment on success', async () => {
+    const { sut } = makeSut()
+    const comment = await sut.add(mockCommentParams())
+    expect(comment).toEqual(mockComment())
   })
 })
