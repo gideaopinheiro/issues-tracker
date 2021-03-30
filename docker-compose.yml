@@ -16,11 +16,16 @@ services:
     command: bash -c "npm install --only=prod && npm run debug"
     environment:
       - MONGO_URL=mongodb://mongo:27017/issues-tracker-api
+      - USER_EMAIL=${USER_EMAIL}
+      - USER_PASS=${USER_PASS}
+      - NODEMAILER_PORT=${NODEMAILER_PORT}
+      - HOST=${HOST}
     volumes:
       - ./dist/:/usr/src/issues-tracker/dist/
       - ./package.json:/usr/src/issues-tracker/package.json
     ports:
       - "5050:5050"
       - "9222:9222"
+      - "${NODEMAILER_PORT}:${NODEMAILER_PORT}"
     links:
       - mongo
