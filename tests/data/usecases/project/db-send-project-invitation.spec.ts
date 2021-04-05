@@ -25,4 +25,11 @@ describe('DbAddProjectMember', () => {
     await sut.add(mockProjectInvitation())
     expect(sendProjectInvitationSpy).toHaveBeenCalledWith(mockProjectInvitation())
   })
+
+  test('should throw if AddProjectMemberRepository throws', async () => {
+    const { sut, sendProjectInvitationRepositoryStub } = makeSut()
+    jest.spyOn(sendProjectInvitationRepositoryStub, 'sendProjectInvitation').mockReturnValueOnce(Promise.reject(new Error()))
+    const response = sut.add(mockProjectInvitation())
+    await expect(response).rejects.toThrow()
+  })
 })
