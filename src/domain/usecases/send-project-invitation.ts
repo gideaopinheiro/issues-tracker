@@ -5,11 +5,6 @@ export interface SendProjectInvitation {
 }
 
 export namespace SendProjectInvitation {
-  export type Params = {
-    from: string
-    status: string
-    project: string
-    message?: string
-  }
+  export type Params = ProjectInvitationModel
   export type Result = ProjectInvitationModel
 }
