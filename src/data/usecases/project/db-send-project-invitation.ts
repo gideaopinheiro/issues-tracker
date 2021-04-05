@@ -5,7 +5,7 @@ export class DbSendProjectInvitation implements SendProjectInvitation {
   constructor (private readonly sendProjectInvitationRepository: SendProjectInvitationRepository) {}
 
   async add (params: SendProjectInvitation.Params): Promise<SendProjectInvitation.Result> {
-    await this.sendProjectInvitationRepository.sendProjectInvitation(params)
-    return null
+    const projectInvitation = await this.sendProjectInvitationRepository.sendProjectInvitation(params)
+    return projectInvitation
   }
 }
