@@ -1,10 +1,11 @@
 import { AddProjectRepository, AddTicketCommentRepository, AddTicketRepository } from '@/data/protocols/db'
+import { SendProjectInvitationRepository } from '@/data/protocols/db/send-project-invitation-repository'
 import { TicketModel } from '@/domain/models'
 import { AddTicket } from '@/domain/usecases/add-ticket'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
 
-export class ProjectMongoRepository implements AddProjectRepository, AddTicketRepository, AddTicketCommentRepository {
+export class ProjectMongoRepository implements AddProjectRepository, AddTicketRepository, AddTicketCommentRepository, SendProjectInvitationRepository {
   async addProject (params: AddProjectRepository.Params): Promise<AddProjectRepository.Result> {
     const projectCollection = await MongoHelper.getCollection('projects')
     const accountCollection = await MongoHelper.getCollection('accounts')
@@ -43,5 +44,34 @@ export class ProjectMongoRepository implements AddProjectRepository, AddTicketRe
     const result = await ticketCollection.findOne({ _id: new ObjectId(params.ticket) })
     const ticket = MongoHelper.mapTicket(result.ops[0])
     return ticket.coments[ticket.coments.length - 1]
+  }
+
+  async sendProjectInvitation (params: SendProjectInvitationRepository.Params): Promise<void> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    const projectCollection = await MongoHelper.getCollection('projects')
+    await accountCollection.updateOne({
+      _id: params.to
+    }, {
+      $push: {
+        invitations: {
+          from: params.from,
+          status: params.status,
+          project: params.project,
+          message: params.message
+        }
+      }
+    })
+    await projectCollection.updateOne({
+      _id: params.project
+    }, {
+      $push: {
+        invitationsSent: {
+          from: params.from,
+          to: params.to,
+          status: params.status,
+          message: params.message
+        }
+      }
+    })
   }
 }
