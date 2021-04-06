@@ -15,8 +15,8 @@ export class SendProjectInvitationController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      const projectInvitation = await this.sendProjectInvitationRepository.sendProjectInvitation(params)
-      return ok(projectInvitation)
+      await this.sendProjectInvitationRepository.sendProjectInvitation(params)
+      return ok('invitation sent')
     } catch (error) {
       return serverError(error)
     }

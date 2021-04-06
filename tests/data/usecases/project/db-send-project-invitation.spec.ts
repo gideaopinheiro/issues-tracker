@@ -32,10 +32,4 @@ describe('DbAddProjectMember', () => {
     const response = sut.add(mockProjectInvitation())
     await expect(response).rejects.toThrow()
   })
-
-  test('should return a projectInvitation on success', async () => {
-    const { sut } = makeSut()
-    const project = await sut.add(mockProjectInvitation())
-    expect(project).toEqual(mockProjectInvitation())
-  })
 })

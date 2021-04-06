@@ -49,7 +49,7 @@ describe('SendProjectInvitation Controller', () => {
   test('should return 200 on success', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockProjectInvitation())
-    expect(httpResponse).toEqual(ok(mockProjectInvitation()))
+    expect(httpResponse).toEqual(ok('invitation sent'))
   })
 
   test('should return 500 if SendProjectInvitationRepository throws', async () => {
