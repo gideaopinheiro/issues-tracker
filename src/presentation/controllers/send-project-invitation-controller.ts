@@ -1,5 +1,5 @@
 import { ProjectInvitationModel } from '@/domain/models'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { badRequest, ok } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 import { SendProjectInvitationRepository } from '@/data/protocols/db/send-project-invitation-repository'
 
@@ -14,8 +14,8 @@ export class SendProjectInvitationController implements Controller {
     if (error) {
       return badRequest(error)
     }
-    await this.sendProjectInvitationRepository.sendProjectInvitation(params)
-    return null
+    const projectInvitation = await this.sendProjectInvitationRepository.sendProjectInvitation(params)
+    return ok(projectInvitation)
   }
 }
 
