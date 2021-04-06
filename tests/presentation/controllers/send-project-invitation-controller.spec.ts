@@ -1,7 +1,7 @@
 import { SendProjectInvitationRepository } from '@/data/protocols/db/send-project-invitation-repository'
 import { SendProjectInvitationController } from '@/presentation/controllers/send-project-invitation-controller'
 import { MissingParamError } from '@/presentation/errors'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { badRequest, ok } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
 import { mockSendProjectInvitationRepository } from '@/tests/data/mocks/mock-send-project-invitation-repository'
 import { mockProjectInvitation } from '@/tests/domain/mocks/mock-project-invitation'
@@ -44,5 +44,11 @@ describe('SendProjectInvitation Controller', () => {
     const sendProjectInvitationSpy = jest.spyOn(sendProjectInvitationRepositoryStub, 'sendProjectInvitation')
     await sut.handle(mockProjectInvitation())
     expect(sendProjectInvitationSpy).toHaveBeenCalledWith(mockProjectInvitation())
+  })
+
+  test('should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockProjectInvitation())
+    expect(httpResponse).toEqual(ok(mockProjectInvitation()))
   })
 })
