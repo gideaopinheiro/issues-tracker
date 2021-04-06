@@ -1,26 +1,26 @@
-import { SendProjectInvitationRepository } from '@/data/protocols/db/send-project-invitation-repository'
+import { SendProjectInvitation } from '@/domain/usecases'
 import { SendProjectInvitationController } from '@/presentation/controllers/send-project-invitation-controller'
 import { MissingParamError } from '@/presentation/errors'
 import { badRequest, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
-import { mockSendProjectInvitationRepository } from '@/tests/data/mocks/mock-send-project-invitation-repository'
 import { mockProjectInvitation } from '@/tests/domain/mocks/mock-project-invitation'
 import { mockValidation } from '@/tests/presentation/mocks'
+import { mockSendProjectInvitation } from '@/tests/domain/mocks'
 
 type SutTypes = {
   sut: Controller
   validationStub: Validation
-  sendProjectInvitationRepositoryStub: SendProjectInvitationRepository
+  sendProjectInvitationStub: SendProjectInvitation
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
-  const sendProjectInvitationRepositoryStub = mockSendProjectInvitationRepository()
-  const sut = new SendProjectInvitationController(validationStub, sendProjectInvitationRepositoryStub)
+  const sendProjectInvitationStub = mockSendProjectInvitation()
+  const sut = new SendProjectInvitationController(validationStub, sendProjectInvitationStub)
   return {
     sut,
     validationStub,
-    sendProjectInvitationRepositoryStub
+    sendProjectInvitationStub
   }
 }
 
@@ -40,10 +40,10 @@ describe('SendProjectInvitation Controller', () => {
   })
 
   test('should call SendProjectInvitationRepository with correct values', async () => {
-    const { sut, sendProjectInvitationRepositoryStub } = makeSut()
-    const sendProjectInvitationSpy = jest.spyOn(sendProjectInvitationRepositoryStub, 'sendProjectInvitation')
+    const { sut, sendProjectInvitationStub } = makeSut()
+    const addSpy = jest.spyOn(sendProjectInvitationStub, 'add')
     await sut.handle(mockProjectInvitation())
-    expect(sendProjectInvitationSpy).toHaveBeenCalledWith(mockProjectInvitation())
+    expect(addSpy).toHaveBeenCalledWith(mockProjectInvitation())
   })
 
   test('should return 200 on success', async () => {
@@ -53,8 +53,8 @@ describe('SendProjectInvitation Controller', () => {
   })
 
   test('should return 500 if SendProjectInvitationRepository throws', async () => {
-    const { sut, sendProjectInvitationRepositoryStub } = makeSut()
-    jest.spyOn(sendProjectInvitationRepositoryStub, 'sendProjectInvitation').mockImplementationOnce(() => {
+    const { sut, sendProjectInvitationStub } = makeSut()
+    jest.spyOn(sendProjectInvitationStub, 'add').mockImplementationOnce(() => {
       throw new Error()
     })
     const httpResponse = await sut.handle(mockProjectInvitation())

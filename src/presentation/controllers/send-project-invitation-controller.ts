@@ -1,12 +1,12 @@
 import { ProjectInvitationModel } from '@/domain/models'
+import { SendProjectInvitation } from '@/domain/usecases'
 import { badRequest, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
-import { SendProjectInvitationRepository } from '@/data/protocols/db/send-project-invitation-repository'
 
 export class SendProjectInvitationController implements Controller {
   constructor (
     private readonly validation: Validation,
-    private readonly sendProjectInvitationRepository: SendProjectInvitationRepository
+    private readonly sendProjectInvitation: SendProjectInvitation
   ) {}
 
   async handle (params: SendProjectInvitationController.Params): Promise<HttpResponse> {
@@ -15,7 +15,7 @@ export class SendProjectInvitationController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      await this.sendProjectInvitationRepository.sendProjectInvitation(params)
+      await this.sendProjectInvitation.add(params)
       return ok('invitation sent')
     } catch (error) {
       return serverError(error)
