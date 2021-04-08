@@ -50,7 +50,7 @@ export class ProjectMongoRepository implements AddProjectRepository, AddTicketRe
     const accountCollection = await MongoHelper.getCollection('accounts')
     const projectCollection = await MongoHelper.getCollection('projects')
     await accountCollection.updateOne({
-      _id: params.to
+      _id: new ObjectId(params.to)
     }, {
       $push: {
         invitations: {
@@ -62,7 +62,7 @@ export class ProjectMongoRepository implements AddProjectRepository, AddTicketRe
       }
     })
     await projectCollection.updateOne({
-      _id: params.project
+      _id: new ObjectId(params.project)
     }, {
       $push: {
         invitationsSent: {
