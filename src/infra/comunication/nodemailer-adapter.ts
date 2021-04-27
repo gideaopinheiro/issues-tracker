@@ -18,8 +18,12 @@ export class NodemailerAdapter implements SendConfirmationEmail {
       html: `<h1>Email Confirmation</h1>
         <h2>Hello ${name}</h2>
         <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-        <a href=http://localhost:5050/api/confirm-account/${confirmationCode}> Click here</a>
-        </div>`,
+        <form action="http://localhost:5050/api/confirm-account/${confirmationCode}" method="post">
+          <input type="hidden" name="var" value="1" />
+          <button class="tim">
+            <span>Confirmar</span>
+          </button>
+        </form>`,
       subject: 'Issues Tracker Confirmation',
       from: `Atendimento IssuesTracker <${smtpConfig.user}>`,
       to: `${email}`
