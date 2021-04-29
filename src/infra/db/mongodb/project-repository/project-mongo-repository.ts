@@ -1,3 +1,4 @@
+import { RandomIdGenerator } from '@/data/protocols/criptography/random-id-generator'
 import { AddProjectRepository, AddTicketCommentRepository, AddTicketRepository } from '@/data/protocols/db'
 import { SendProjectInvitationRepository } from '@/data/protocols/db/send-project-invitation-repository'
 import { TicketModel } from '@/domain/models'
@@ -6,6 +7,8 @@ import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
 
 export class ProjectMongoRepository implements AddProjectRepository, AddTicketRepository, AddTicketCommentRepository, SendProjectInvitationRepository {
+  constructor (private readonly randomIdGenerator: RandomIdGenerator) {}
+
   async addProject (params: AddProjectRepository.Params): Promise<AddProjectRepository.Result> {
     const projectCollection = await MongoHelper.getCollection('projects')
     const accountCollection = await MongoHelper.getCollection('accounts')
@@ -49,11 +52,13 @@ export class ProjectMongoRepository implements AddProjectRepository, AddTicketRe
   async sendProjectInvitation (params: SendProjectInvitationRepository.Params): Promise<void> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const projectCollection = await MongoHelper.getCollection('projects')
+    const invitationId = this.randomIdGenerator.generateId()
     await accountCollection.updateOne({
       _id: new ObjectId(params.to)
     }, {
       $push: {
         invitations: {
+          id: invitationId,
           from: params.from,
           status: params.status,
           project: params.project,
@@ -66,6 +71,7 @@ export class ProjectMongoRepository implements AddProjectRepository, AddTicketRe
     }, {
       $push: {
         invitationsSent: {
+          id: invitationId,
           from: params.from,
           to: params.to,
           status: params.status,

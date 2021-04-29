@@ -1,9 +1,11 @@
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { ProjectMongoRepository } from '@/infra/db/mongodb/project-repository/project-mongo-repository'
 import { mockProjectParams, mockTicketParams } from '@/tests/domain/mocks'
+import { mockRandomIdGenerator } from '@/tests/data/mocks/mock-random-id-generator'
 
 const makeSut = (): ProjectMongoRepository => {
-  return new ProjectMongoRepository()
+  const randomIdGeneratorStub = mockRandomIdGenerator()
+  return new ProjectMongoRepository(randomIdGeneratorStub)
 }
 
 describe('ProjectMongoRepository', () => {
