@@ -1,9 +1,13 @@
-import { ProjectInvitationModel } from '@/domain/models'
-
 export interface SendProjectInvitation {
   add: (params: SendProjectInvitation.Params) => Promise<void>
 }
 
 export namespace SendProjectInvitation {
-  export type Params = ProjectInvitationModel
+  export type Params = {
+    from: string
+    to: string
+    status: string
+    project: string
+    message?: string
+  }
 }

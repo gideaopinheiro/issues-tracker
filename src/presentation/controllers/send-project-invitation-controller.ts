@@ -1,4 +1,3 @@
-import { ProjectInvitationModel } from '@/domain/models'
 import { SendProjectInvitation } from '@/domain/usecases'
 import { badRequest, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
@@ -24,5 +23,5 @@ export class SendProjectInvitationController implements Controller {
 }
 
 export namespace SendProjectInvitationController {
-  export type Params = ProjectInvitationModel
+  export type Params = SendProjectInvitation.Params
 }
