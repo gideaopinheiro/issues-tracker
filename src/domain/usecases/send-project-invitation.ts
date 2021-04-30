@@ -1,5 +1,5 @@
 export interface SendProjectInvitation {
-  add: (params: SendProjectInvitation.Params) => Promise<void>
+  send: (params: SendProjectInvitation.Params) => Promise<void>
 }
 
 export namespace SendProjectInvitation {

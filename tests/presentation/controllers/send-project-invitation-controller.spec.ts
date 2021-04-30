@@ -41,7 +41,7 @@ describe('SendProjectInvitation Controller', () => {
 
   test('should call SendProjectInvitationRepository with correct values', async () => {
     const { sut, sendProjectInvitationStub } = makeSut()
-    const addSpy = jest.spyOn(sendProjectInvitationStub, 'add')
+    const addSpy = jest.spyOn(sendProjectInvitationStub, 'send')
     await sut.handle(mockProjectInvitation())
     expect(addSpy).toHaveBeenCalledWith(mockProjectInvitation())
   })
@@ -54,7 +54,7 @@ describe('SendProjectInvitation Controller', () => {
 
   test('should return 500 if SendProjectInvitationRepository throws', async () => {
     const { sut, sendProjectInvitationStub } = makeSut()
-    jest.spyOn(sendProjectInvitationStub, 'add').mockImplementationOnce(() => {
+    jest.spyOn(sendProjectInvitationStub, 'send').mockImplementationOnce(() => {
       throw new Error()
     })
     const httpResponse = await sut.handle(mockProjectInvitation())

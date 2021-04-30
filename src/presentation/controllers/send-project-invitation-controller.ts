@@ -14,7 +14,7 @@ export class SendProjectInvitationController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      await this.sendProjectInvitation.add(params)
+      await this.sendProjectInvitation.send(params)
       return ok('invitation sent')
     } catch (error) {
       return serverError(error)
