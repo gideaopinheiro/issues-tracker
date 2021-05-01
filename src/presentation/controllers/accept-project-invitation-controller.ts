@@ -1,5 +1,5 @@
 import { AcceptProjectInvitation } from '@/domain/usecases'
-import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
+import { badRequest, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 
 export class AcceptProjectInvitationController implements Controller {
@@ -15,7 +15,7 @@ export class AcceptProjectInvitationController implements Controller {
         return badRequest(error)
       }
       await this.acceptProjectInvitation.accept(params)
-      return null
+      return ok('invitation accepted successfully')
     } catch (error) {
       return serverError(error)
     }
