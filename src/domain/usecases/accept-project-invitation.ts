@@ -1,10 +1,11 @@
 export interface AcceptProjectInvitation {
-  accept: (params: AcceptProjectInvitation.Params) => void
+  accept: (params: AcceptProjectInvitation.Params) => Promise<void>
 }
 
 export namespace AcceptProjectInvitation {
   export type Params = {
-    id: string
-    from: string
+    sentBy: string
+    projectId: string
+    invitationId: string
   }
 }
