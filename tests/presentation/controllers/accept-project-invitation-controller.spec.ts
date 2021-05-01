@@ -1,7 +1,7 @@
 import { AcceptProjectInvitation } from '@/domain/usecases'
 import { AcceptProjectInvitationController } from '@/presentation/controllers/accept-project-invitation-controller'
 import { MissingParamError } from '@/presentation/errors'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
 import { mockAcceptProjectInvitation } from '@/tests/domain/mocks/mock-accept-project-invitation'
 import { mockValidation } from '@/tests/presentation/mocks'
@@ -44,5 +44,12 @@ describe('AcceptProjectInvitationController', () => {
     const acceptSpy = jest.spyOn(acceptProjectInvitationStub, 'accept')
     await sut.handle(mockAcceptInvitationRequest())
     expect(acceptSpy).toHaveBeenCalledWith(mockAcceptInvitationRequest())
+  })
+
+  test('should return 500 if AcceptProjectInvitation fails', async () => {
+    const { sut, acceptProjectInvitationStub } = makeSut()
+    jest.spyOn(acceptProjectInvitationStub, 'accept').mockReturnValueOnce(Promise.reject(new Error()))
+    const httpResponse = await sut.handle(mockAcceptInvitationRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
