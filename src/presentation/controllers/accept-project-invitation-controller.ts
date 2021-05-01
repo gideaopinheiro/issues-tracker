@@ -1,5 +1,5 @@
 import { AcceptProjectInvitation } from '@/domain/usecases'
-import { badRequest } from '@/presentation/helpers/http/http-helper'
+import { badRequest, serverError } from '@/presentation/helpers/http/http-helper'
 import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
 
 export class AcceptProjectInvitationController implements Controller {
@@ -9,12 +9,16 @@ export class AcceptProjectInvitationController implements Controller {
   ) {}
 
   async handle (params: AcceptProjectInvitationController.Params): Promise<HttpResponse> {
-    const error = this.validation.validate(params)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(params)
+      if (error) {
+        return badRequest(error)
+      }
+      await this.acceptProjectInvitation.accept(params)
+      return null
+    } catch (error) {
+      return serverError(error)
     }
-    await this.acceptProjectInvitation.accept(params)
-    return null
   }
 }
 
