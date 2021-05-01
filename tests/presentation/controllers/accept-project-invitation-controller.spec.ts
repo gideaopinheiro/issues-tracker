@@ -1,21 +1,26 @@
+import { AcceptProjectInvitation } from '@/domain/usecases'
 import { AcceptProjectInvitationController } from '@/presentation/controllers/accept-project-invitation-controller'
 import { MissingParamError } from '@/presentation/errors'
 import { badRequest } from '@/presentation/helpers/http/http-helper'
 import { Controller, Validation } from '@/presentation/protocols'
+import { mockAcceptProjectInvitation } from '@/tests/domain/mocks/mock-accept-project-invitation'
 import { mockValidation } from '@/tests/presentation/mocks'
 import { mockAcceptInvitationRequest } from '@/tests/presentation/mocks/mock-accept-invitation-request'
 
 type SutTypes = {
   sut: Controller
   validationStub: Validation
+  acceptProjectInvitationStub: AcceptProjectInvitation
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
-  const sut = new AcceptProjectInvitationController(validationStub)
+  const acceptProjectInvitationStub = mockAcceptProjectInvitation()
+  const sut = new AcceptProjectInvitationController(validationStub, acceptProjectInvitationStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    acceptProjectInvitationStub
   }
 }
 
@@ -32,5 +37,12 @@ describe('AcceptProjectInvitationController', () => {
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('sentBy'))
     const httpResponse = await sut.handle(mockAcceptInvitationRequest())
     expect(httpResponse).toEqual(badRequest(new MissingParamError('sentBy')))
+  })
+
+  test('should call AcceptProjectInvitation with correct values', async () => {
+    const { sut, acceptProjectInvitationStub } = makeSut()
+    const acceptSpy = jest.spyOn(acceptProjectInvitationStub, 'accept')
+    await sut.handle(mockAcceptInvitationRequest())
+    expect(acceptSpy).toHaveBeenCalledWith(mockAcceptInvitationRequest())
   })
 })
