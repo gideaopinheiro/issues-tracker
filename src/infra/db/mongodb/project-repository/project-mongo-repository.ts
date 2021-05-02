@@ -1,12 +1,12 @@
 import { RandomIdGenerator } from '@/data/protocols/criptography/random-id-generator'
-import { AddProjectRepository, AddTicketCommentRepository, AddTicketRepository } from '@/data/protocols/db'
+import { AcceptProjectInvitationRepository, AddProjectRepository, AddTicketCommentRepository, AddTicketRepository } from '@/data/protocols/db'
 import { SendProjectInvitationRepository } from '@/data/protocols/db/send-project-invitation-repository'
 import { TicketModel } from '@/domain/models'
 import { AddTicket } from '@/domain/usecases/add-ticket'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
 
-export class ProjectMongoRepository implements AddProjectRepository, AddTicketRepository, AddTicketCommentRepository, SendProjectInvitationRepository {
+export class ProjectMongoRepository implements AddProjectRepository, AddTicketRepository, AddTicketCommentRepository, SendProjectInvitationRepository, AcceptProjectInvitationRepository {
   constructor (private readonly randomIdGenerator: RandomIdGenerator) {}
 
   async addProject (params: AddProjectRepository.Params): Promise<AddProjectRepository.Result> {
@@ -76,6 +76,29 @@ export class ProjectMongoRepository implements AddProjectRepository, AddTicketRe
           to: params.to,
           status: params.status,
           message: params.message
+        }
+      }
+    })
+  }
+
+  async acceptProjectInvitation (params: AcceptProjectInvitationRepository.Params): Promise<void> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    const projectCollection = await MongoHelper.getCollection('projects')
+    await projectCollection.updateOne({
+      _id: new ObjectId(params.projectId)
+    }, {
+      $pull: {
+        invitationsSent: {
+          id: params.invitationId
+        }
+      }
+    })
+    await accountCollection.updateOne({
+      _id: new ObjectId(params.sentTo)
+    }, {
+      $pull: {
+        invitations: {
+          id: params.invitationId
         }
       }
     })

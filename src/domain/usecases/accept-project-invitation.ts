@@ -4,6 +4,7 @@ export interface AcceptProjectInvitation {
 
 export namespace AcceptProjectInvitation {
   export type Params = {
+    sentTo: string
     sentBy: string
     projectId: string
     invitationId: string

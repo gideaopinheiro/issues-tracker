@@ -24,6 +24,7 @@ export class AcceptProjectInvitationController implements Controller {
 
 export namespace AcceptProjectInvitationController {
   export type Params = {
+    sentTo: string
     sentBy: string
     projectId: string
     invitationId: string

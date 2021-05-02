@@ -4,7 +4,7 @@ import { AcceptProjectInvitation } from '@/domain/usecases/accept-project-invita
 export class DbAcceptProjectInvitation implements AcceptProjectInvitation {
   constructor (private readonly acceptProjectInvitationRepository: AcceptProjectInvitationRepository) {}
 
-  accept (params: AcceptProjectInvitation.Params): void {
+  async accept (params: AcceptProjectInvitation.Params): Promise<void> {
     this.acceptProjectInvitationRepository.acceptProjectInvitation(params)
   }
 }
