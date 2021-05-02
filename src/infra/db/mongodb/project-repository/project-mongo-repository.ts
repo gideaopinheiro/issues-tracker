@@ -91,6 +91,11 @@ export class ProjectMongoRepository implements AddProjectRepository, AddTicketRe
         invitationsSent: {
           id: params.invitationId
         }
+      },
+      $push: {
+        members: {
+          id: params.sentTo
+        }
       }
     })
     await accountCollection.updateOne({
@@ -100,6 +105,16 @@ export class ProjectMongoRepository implements AddProjectRepository, AddTicketRe
         invitations: {
           id: params.invitationId
         }
+      },
+      $push: {
+        projects: params.projectId
+      }
+    })
+    await accountCollection.updateOne({
+      _id: new ObjectId(params.sentBy)
+    }, {
+      $push: {
+        projects: params.projectId
       }
     })
   }

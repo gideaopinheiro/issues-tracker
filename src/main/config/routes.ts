@@ -4,7 +4,7 @@ import loginRouter from '@/main/routes/login-routes'
 import confirmationRouter from '@/main/routes/confirmation-routes'
 import addProjectRouter from '@/main/routes/add-project-routes'
 import addTicketRouter from '@/main/routes/add-ticket-routes'
-import sendProjectInvitationRouter from '@/main/routes/project-invitation-routes'
+import ProjectInvitationRouters from '@/main/routes/project-invitation-routes'
 
 export default (app: Express): void => {
   const router = Router()
@@ -14,5 +14,5 @@ export default (app: Express): void => {
   confirmationRouter(router)
   addProjectRouter(router)
   addTicketRouter(router)
-  sendProjectInvitationRouter(router)
+  ProjectInvitationRouters(router)
 }
